@@ -1,0 +1,32 @@
+Nombre    Tipo Dato    Valor    Longitud
+a    
+b    
+c    
+d    FLOAT
+hola    ENTERO    2555    4
+numero1    CONST_FLOTANTE    99.99    5
+STRING    "HOLA"    6
+PEPE    saldos    ENTERO    0    1
+saldos    ENTERO    85    2
+mensaje    STRING    "Le queda poco saldo"    21
+STRING    "Hola mundoWWWWEWEQW"    21
+saldos    ENTERO    0    1
+a    
+ENTERO    2    1
+
+a    b    ENTERO    4    1
+mensaje    STRING    "Le queda poco saldo"    21
+STRING    "Hola mundoWWWWEWEQW"    21
+saldos    ENTERO    0    1
+mensaje    STRING    "ESTOY EN EL WHILEE"    20
+STRING    "Q UE ONDAAAA"    14
+
+ENTERO    4    1
+
+ENTERO    2    1
+
+ENTERO    12    2
+
+ENTERO    24    2
+
+ENTERO    48    2

@@ -1,0 +1,27 @@
+DECVAR
+a,b,c,d:FLOAT
+ENDDEC
+hola=2555
+numero1=99.99
+WRITE "HOLA"
+READ PEPE
+IF (saldos > 0 OR saldos > 85 )
+{
+mensaje = "Le queda poco saldo"
+WRITE "Hola mundoWWWWEWEQW"
+}
+IF (saldos > 0 AND BETWEEN (a, [2 ; a*(b+4)]))
+{
+mensaje = "Le queda poco saldo"
+WRITE "Hola mundoWWWWEWEQW"
+}
+WHILE (saldos > 0)
+{
+mensaje = "ESTOY EN EL WHILEE"
+WRITE "Q UE ONDAAAA"
+
+}
+TAKE (-    ; 4  ;   [2 ; 12 ; 24 ; 48] )
+-/ esto es un comentario /-
+-//-
+-/ esto es un comentario y dentro hay otro -/comentario/- /-
