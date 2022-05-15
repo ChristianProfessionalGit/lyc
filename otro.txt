@@ -10,7 +10,7 @@ IF (saldos > 0 OR saldos > 85 )
 mensaje = "Le queda poco saldo"
 WRITE "Hola mundoWWWWEWEQW"
 }
-IF (saldos > 0 AND BETWEEN (a, [2 ; a*(b+4)])) 
+IF (saldos > 0 AND BETWEEN (a, [2 ; a*(b+4)]))
 {
 mensaje = "Le queda poco saldo"
 WRITE "Hola mundoWWWWEWEQW"
