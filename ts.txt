@@ -1,32 +1,18 @@
-Nombre    Tipo Dato    Valor    Longitud
-a    
-b    
-c    
-d    FLOAT
-hola    ENTERO    2555    4
-numero1    CONST_FLOTANTE    99.99    5
-STRING    "HOLA"    6
-PEPE    saldos    ENTERO    0    1
-saldos    ENTERO    85    2
-mensaje    STRING    "Le queda poco saldo"    21
-STRING    "Hola mundoWWWWEWEQW"    21
-saldos    ENTERO    0    1
-a    
-ENTERO    2    1
-
-a    b    ENTERO    4    1
-mensaje    STRING    "Le queda poco saldo"    21
-STRING    "Hola mundoWWWWEWEQW"    21
-saldos    ENTERO    0    1
-mensaje    STRING    "ESTOY EN EL WHILEE"    20
-STRING    "Q UE ONDAAAA"    14
-
-ENTERO    4    1
-
-ENTERO    2    1
-
-ENTERO    12    2
-
-ENTERO    24    2
-
-ENTERO    48    2
+NOMBRE                              TIPO DE DATO     VALOR                               LONGITUD                           
+a                                   FLOAT                                                0                                  
+b                                   FLOAT                                                0                                  
+c                                   FLOAT                                                0                                  
+d                                   FLOAT                                                0                                  
+PEPE                                STRING                                               0                                  
+2555                                CONST_ENTERA     2555                                0                                  
+99.99                               CONST_FLOTANTE   99.99                               0                                  
+"HOLAdsadasd"                       CONST_CADENA     HOLAdsadasd                         11                                 
+0                                   CONST_ENTERA     0                                   0                                  
+85                                  CONST_ENTERA     85                                  0                                  
+"Le queda poco saldo"               CONST_CADENA     Le_queda_poco_saldo                 19                                 
+"Hola mundoWWWWEWEQW"               CONST_CADENA     Hola_mundoWWWWEWEQW                 19                                 
+2                                   CONST_ENTERA     2                                   0                                  
+4                                   CONST_ENTERA     4                                   0                                  
+"ESTOY EN EL WHILEE"                CONST_CADENA     ESTOY_EN_EL_WHILEE                  18                                 
+"Q UE ONDAAAA"                      CONST_CADENA     Q_UE_ONDAAAA                        12                                 
+"Hola mundo"                        CONST_CADENA     Hola_mundo                          10                                 

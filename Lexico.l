@@ -5,7 +5,6 @@
 #include <string.h>
 #include "y.tab.h"
 FILE *yyin;
-int yylval;
 char *yyltext;
 
 int yyerror1(void);
@@ -60,40 +59,16 @@ DISTINTO "!="
 
 
 
-"INTEGER"   {               
-                        FILE *f = fopen("ts.txt", "a");
-                        if (f == NULL)
-                        {
-                            printf("Error al abrir la tabla de simbolos.\n");
-                            exit(1);
-                        }
-
-                        fprintf(f, "INTEGER\n"); 
+"INTEGER"   		{               
                         return INTEGER;
                     }
 
 
 "FLOAT"             {               
-                        FILE *f = fopen("ts.txt", "a");
-                        if (f == NULL)
-                        {
-                            printf("Error al abrir la tabla de simbolos.\n");
-                            exit(1);
-                        }
-
-                        fprintf(f, "FLOAT\n"); 
                         return FLOAT;
                     }
 
-"STRING"  {               
-                        FILE *f = fopen("ts.txt", "a");
-                        if (f == NULL)
-                        {
-                            printf("Error al abrir la tabla de simbolos.\n");
-                            exit(1);
-                        }
-
-                        fprintf(f, "STRING\n"); 
+"STRING"  			{               
                         return STRING;
                     }
 
@@ -112,14 +87,7 @@ DISTINTO "!="
                         printf("**ERROR LEXICO - La cadena %s supera la cota de 30 caracteres en la linea %d.\n",yytext, yylineno);
 						exit(1);
                     }else{
-                        FILE *f = fopen("ts.txt", "a");
-                        if (f == NULL)
-                        {
-                            printf("Error al abrir la tabla de simbolos.\n");
-                            exit(1);
-                        }
-
-                        fprintf(f, "STRING    %s    %d\n", yytext,strlen(yytext));
+						yylval.string_val = strdup(yytext);
                         return CONST_CADENA;
                     }
                     
@@ -129,14 +97,7 @@ DISTINTO "!="
 						printf("**ERROR LEXICO - La constante entera %s supera su valor maximo en la linea %d.\n",yytext, yylineno);
 						exit(1);
 					}else{
-						FILE *f = fopen("ts.txt", "a");
-						if (f == NULL)
-						{
-							printf("Error al abrir la tabla de simbolos.\n");
-							exit(1);
-						}
-
-						fprintf(f, "ENTERO    %s    %d\n", yytext,strlen(yytext));
+						yylval.int_val = atoi(yytext);
 						return CONST_ENTERA;
                     }
                     
@@ -147,52 +108,26 @@ DISTINTO "!="
 						printf("**ERROR LEXICO - La constante flotante %s supera su valor maximo en la linea %d.\n",yytext, yylineno);
 						exit(1);
 					}else{
-						FILE *f = fopen("ts.txt", "a");
-						if (f == NULL)
-						{
-							printf("Error al abrir la tabla de simbolos.\n");
-							exit(1);
-						}
-
-						fprintf(f, "CONST_FLOTANTE    %s    %d\n", yytext,strlen(yytext));
+						yylval.float_val = atof(yytext);
 						return CONST_FLOTANTE;
 					}
                 }
 
 {ID}            {
-                    FILE *f = fopen("ts.txt", "a+");
-                    if (f == NULL)
-                    {
-                        printf("Error al abrir la tabla de simbolos.\n");
-                        exit(1);
-                    }
-                    
-                    const char *nombre = yytext;
-                    fprintf(f, "%s    ", nombre);
-                    return ID;
+					if(strlen(yytext) > 30){
+						printf("**ERROR LEXICO - La longitud variable %s supera su valor maximo (30) en la linea %d.\n",yytext, yylineno);
+						exit(1);
+					}else{
+						yylval.string_val = strdup(yytext);
+						return ID;
+					}
                 }
 {ASIGNACION} {return ASIGNACION;}
 
 {COMA} {
-            FILE *f = fopen("ts.txt", "a");
-            if (f == NULL)
-            {
-                printf("Error al abrir la tabla de simbolos.\n");
-                exit(1);
-            }
-
-            fprintf(f, "\n");
             return COMA;
         }
 {PUNTO_COMA} {
-            FILE *f = fopen("ts.txt", "a");
-            if (f == NULL)
-            {
-                printf("Error al abrir la tabla de simbolos.\n");
-                exit(1);
-            }
-
-            fprintf(f, "\n");
             return PUNTO_COMA;
         }
 

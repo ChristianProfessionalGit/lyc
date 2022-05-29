@@ -2,26 +2,75 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <string.h>
+#include <math.h>
 #include "y.tab.h"
 int yystopparser=0;
 FILE *yyin;
 
+#define TAM 35
+#define VARIABLE_DUPLICADA 2
+#define SIN_MEMORIA 3
+#define ID_EN_LISTA 4
+
+extern char * yytext;
 int yyerror();
 int yylex();
-void generar_tabla_simbolos();
-void cerrar_tabla_simbolos();
+extern int yylineno;
+
+typedef struct
+	{
+		char nombre[TAM];
+		char tipodato[TAM];
+		char valor[TAM];
+		int longitud;
+	}t_info;
+
+	typedef struct s_nodo
+	{
+		t_info info;
+		struct s_nodo *sSig;
+	}t_nodo;
+
+	typedef t_nodo *t_lista;
+	char tipoDato[20];
+	int contadorDeclVar;
+	void insertarTipoDato(t_lista *pl, int *cant);
+	
+	typedef int (*t_cmp)(const void *, const void *);
+	int comparar_por_nombre(const void *, const void *);
+
+	void crear_lista(t_lista *p);
+	int insertar_lista_orden_sin_duplicados(t_lista *l_ts, t_info *d, t_cmp);
+	int buscar_en_lista(t_lista *pl, char* cadena );
+
+	void generar_ts(t_lista *l_ts);
+	int insertar_en_ts(t_lista *l_ts, t_info *d);
+
+	void grabar_lista_en_archivo(t_lista *);
+	void quitar_blancos_y_comillas(char *);
+	void quitar_comillas(char *);
+
+	t_lista lista_ts;
+	t_info dato;
 
 %}
+
+%union {
+	int int_val;
+	float float_val;
+	char *string_val;
+}
 
 %token DECVAR;
 %token ENDDEC;
 %token INTEGER;
 %token FLOAT;
 %token STRING;
-%token CONST_CADENA;
-%token CONST_ENTERA;
-%token CONST_FLOTANTE;
-%token ID;
+%token <string_val>CONST_CADENA;
+%token <int_val>CONST_ENTERA;
+%token <float_val>CONST_FLOTANTE;
+%token <string_val>ID;
 %token VAR_NUMERICA;
 %token ASIGNACION;
 %token COMA;
@@ -55,7 +104,7 @@ void cerrar_tabla_simbolos();
 %token ENDIF;
 %token BETWEEN;
 %token TAKE;
-
+%start programa
 %%
 
 programa:
@@ -85,11 +134,39 @@ lista_declaraciones:
     | declaracion  {printf("Regla 18 - lista_declaraciones es: declaracion\n");};  
     ;
 declaracion:
-    lista_variables OPERACION_TIPO tipo_variable {printf("Regla 19 - declaracion es: lista_variables OPERACION_TIPO tipo_variable \n");};  
+    lista_variables OPERACION_TIPO tipo_variable {
+		insertarTipoDato(&lista_ts, &contadorDeclVar);	
+		printf("Regla 19 - declaracion es: lista_variables OPERACION_TIPO tipo_variable \n");};  
     ;
 lista_variables:
-    lista_variables COMA ID  {printf("Regla 20 - lista_variables es: lista_variables COMA ID \n");};
-    | ID {printf("Regla 21 - lista_variables es: ID \n");};
+    lista_variables COMA ID  {
+								strcpy(dato.nombre, yylval.string_val);
+								strcpy(dato.valor, "");
+								strcpy(dato.tipodato, "");
+								dato.longitud = 0;
+								if( VARIABLE_DUPLICADA == insertar_en_ts(&lista_ts, &dato))
+								{
+									printf("Error semantico en linea %d: variable duplicada %s\n", yylineno, dato.nombre );
+									system ("Pause");
+									exit (1);
+								}
+								contadorDeclVar++;
+								printf("Declaracion: %s\n",yylval.string_val );
+								printf("Regla 20 - lista_variables es: lista_variables COMA ID \n");}
+    | ID {
+								strcpy(dato.nombre, yylval.string_val);
+								strcpy(dato.valor, "");
+								strcpy(dato.tipodato, "");
+								dato.longitud = 0;
+								if( VARIABLE_DUPLICADA == insertar_en_ts(&lista_ts, &dato))
+								{
+									printf("Error semantico en linea %d: variable duplicada %s\n", yylineno, dato.nombre );
+									system ("Pause");
+									exit (1);
+								}
+								contadorDeclVar=1;
+								printf("Declaracion: %s\n",yylval.string_val);
+								printf("Regla 21 - lista_variables es: ID \n");};
     ;
 if:
     IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA {printf("Regla 22 - IF es: IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");};
@@ -101,18 +178,22 @@ asignacion:
     ID ASIGNACION expresion {printf("Regla 24 - ASIGNACION: ID = expresion\n");}    
     ;
 entrada:
-    READ ID {printf("Regla 25 - La entrada es: READ ID\n");}
+    READ ID {
+		buscar_en_lista(&lista_ts, yylval.string_val);
+		printf("Regla 25 - La entrada es: READ ID\n");}
     ;
 salida:
-    WRITE constante {printf("Regla 26 - La salida es: WRITE valor\n");}
+    WRITE constante {
+		buscar_en_lista(&lista_ts, yylval.string_val);
+		printf("Regla 26 - La salida es: WRITE valor\n");}
     ;
 condiciones:
     condicion operador_logico condicion  {printf("Regla 27 - condicion operador_logico condicion \n");};
     | condicion {printf("Regla 28 - CONDICION\n");};
+	| NOT condicion {printf("Regla 29 - NOT CONDICION\n");};	
     ;
 condicion:
-    ID comparador constante {printf("Regla 29 - condicion es: ID comparador constante \n");};
-    | NOT ID {printf("Regla 30 - condicion es: NOT ID comparador constante \n");};
+    ID comparador constante {printf("Regla 30 - condicion es: ID comparador constante \n");};
     | between {printf("Regla 31 - condicion es: between comparador constante \n");};
     ;
 operador_logico:
@@ -138,19 +219,46 @@ termino:
     | termino DIVI factor {printf("Regla 45 - termino es: termino DIVI factor \n");};
     ;
 factor:
-    ID  {printf("Regla 46 - factor es: ID \n");};
+    ID  {
+		buscar_en_lista(&lista_ts, yylval.string_val);
+		printf("Regla 46 - factor es: ID \n");};
     | constante {printf("Regla 47 - factor es: constante \n");};
     | PAREN_ABIERTO expresion PAREN_CERRADO {printf("Regla 48 - factor es: PAREN_ABIERTO expresion PAREN_CERRADO  \n");};
     ;
 constante:
-    CONST_ENTERA  {printf("Regla 49 - constante es: CONST_ENTERA \n");};
-    | CONST_FLOTANTE {printf("Regla 50 - constante es: CONST_FLOTANTE \n");};
-    | CONST_CADENA {printf("Regla 51 - constante es: CONST_CADENA \n");};
+    CONST_ENTERA  {
+					strcpy(dato.nombre, yytext);
+					strcpy(dato.valor, yytext);
+					strcpy(dato.tipodato, "CONST_ENTERA");
+					dato.longitud = 0;
+					insertar_en_ts(&lista_ts, &dato);
+					printf("Regla 49 - constante es: CONST_ENTERA \n");};
+    | CONST_FLOTANTE {
+					strcpy(dato.nombre, yytext);
+					strcpy(dato.valor, yytext);
+					strcpy(dato.tipodato, "CONST_FLOTANTE");
+					dato.longitud = 0;
+					insertar_en_ts(&lista_ts, &dato);
+					printf("Regla 50 - constante es: CONST_FLOTANTE \n");};
+    | CONST_CADENA {
+					dato.longitud = strlen(yytext)-2;
+					strcpy(dato.nombre, yytext);
+					quitar_blancos_y_comillas(yytext);
+					strcpy(dato.valor, yytext);												
+					strcpy(dato.tipodato, "CONST_CADENA");												
+					insertar_en_ts(&lista_ts, &dato);
+					printf("Regla 51 - constante es: CONST_CADENA \n");};
     ;
 tipo_variable:
-    INTEGER {printf("Regla 52 - tipo_variable es: INTEGER \n");};
-    | FLOAT {printf("Regla 53 - tipo_variable es: FLOAT \n");};
-    | STRING {printf("Regla 54 - tipo_variable es: STRING \n");};
+    INTEGER {
+		strcpy(tipoDato,"INTEGER");
+		printf("Regla 52 - tipo_variable es: INTEGER \n");};
+    | FLOAT {
+		strcpy(tipoDato,"FLOAT");
+		printf("Regla 53 - tipo_variable es: FLOAT \n");};
+    | STRING {
+		strcpy(tipoDato,"STRING");
+		printf("Regla 54 - tipo_variable es: STRING \n");};
     ;
 valor:
     ID STRING {printf("Regla 55 - valor es: ID STRING \n");};
@@ -177,18 +285,20 @@ take:
 
 int main(int argc, char *argv[])
 {
-    if((yyin = fopen(argv[1], "rt"))==NULL)
-    {
-        printf("\nNo se pudo abrir el archivo de prueba: %s\n",argv[1]);
-    }
-    else
-    {
-        generar_tabla_simbolos();
-        yyparse();
-        cerrar_tabla_simbolos();
-    }
-    fclose(yyin);
-    return 0;
+  if ((yyin = fopen(argv[1], "rt")) == NULL)
+  {
+	printf("\nNo se puede abrir el archivo: %s\n", argv[1]);
+  }
+  else
+  {
+	generar_ts(&lista_ts);
+
+	yyparse();
+
+	grabar_lista_en_archivo(&lista_ts);
+  	fclose(yyin);
+  }
+  return 0;
 }
 
 int yyerror(void)
@@ -197,25 +307,118 @@ int yyerror(void)
     exit(1);
 }
 
-void generar_tabla_simbolos(){
-    FILE *f = fopen("ts.txt", "w");
-    if (f == NULL)
-    {
-        printf("Error opening file!\n");
-        exit(1);
-    }
+void generar_ts(t_lista *l_ts){
+    crear_lista(l_ts);
 
-    /* print some text */
-    fprintf(f, "Nombre    Tipo Dato    Valor    Longitud\n");
+	printf("\n");
+	printf("Creando la tabla de simbolos...\n");	
+	printf("Tabla de simbolos creada\n");
 }
 
-void cerrar_tabla_simbolos(){
-    FILE *f = fopen("ts.txt", "a");
-    if (f == NULL)
-    {
-        printf("Error opening file!\n");
-        exit(1);
-    }
+void crear_lista(t_lista *p) {
+    *p=NULL;
+}
 
-    fclose(f);
+int insertar_en_ts(t_lista *l_ts, t_info *d) {
+	insertar_lista_orden_sin_duplicados(l_ts, d, comparar_por_nombre);
+}
+
+
+int insertar_lista_orden_sin_duplicados(t_lista *pl, t_info *d, t_cmp comparar)
+{
+    int cmp;
+    t_nodo *nuevo;
+    while(*pl && (cmp=comparar(d, &(*pl)->info))!=0)
+        pl=&(*pl)->sSig;
+    if(*pl && cmp==0){
+        return VARIABLE_DUPLICADA;
+	}
+    nuevo=(t_nodo*)malloc(sizeof(t_nodo));
+    if(!nuevo)
+        return SIN_MEMORIA;
+    nuevo->info=*d;
+    nuevo->sSig=*pl;
+    *pl=nuevo;
+    return 1;
+}
+
+// Inserta el tipo de dato de las variables declaradas, usa una variable global "char* tipoDato", para pasar el tipo de dato que corresponde.
+void insertarTipoDato(t_lista *pl, int *cant)
+{
+	if( (*pl)->sSig != NULL )
+        insertarTipoDato( &(*pl)->sSig , cant);
+	if( (*cant) > 0)
+	strcpy((*pl)->info.tipodato,tipoDato);
+	(*cant)--;
+}
+
+int buscar_en_lista(t_lista *pl, char* cadena )
+{
+    int cmp;
+
+    while(*pl && (cmp=strcmp(cadena,(*pl)->info.nombre))!=0)
+        pl=&(*pl)->sSig;
+    if(cmp==0)
+	{
+        return ID_EN_LISTA;
+	}
+	printf("\nVariable sin declarar: %s \n",cadena);
+    exit(1);
+}
+
+int comparar_por_nombre(const void *d1, const void *d2)
+{
+    t_info *dato1=(t_info*)d1;
+    t_info *dato2=(t_info*)d2;
+
+    return strcmp(dato1->nombre, dato2->nombre);
+}
+
+void grabar_lista_en_archivo(t_lista *pl){
+	FILE *pf;
+
+	pf = fopen("ts.txt", "wt");
+
+	// Cabecera
+	fprintf(pf,"%-35s %-16s %-35s %-35s", "NOMBRE", "TIPO DE DATO", "VALOR", "LONGITUD");
+
+	// Datos
+	while(*pl) {
+		fprintf(pf,"\n%-35s %-16s %-35s %-35d", (*pl)->info.nombre, (*pl)->info.tipodato, (*pl)->info.valor, (*pl)->info.longitud);
+		pl=&(*pl)->sSig;
+	}
+
+	fclose(pf);
+}
+
+//quita los blancos por guiones bajos y elimina las comillas
+void quitar_blancos_y_comillas(char *pc){
+
+	quitar_comillas(pc);
+
+	char *aux = pc;
+	
+	while(*aux != '\0'){
+		if(*aux == ' '){
+			*aux= '_';
+		}
+		aux++;
+	}
+}
+
+void quitar_comillas(char *pc){
+
+	// Cadena del tipo "" (sin nada)
+	if(strlen(pc) == 2){
+		*pc='\0';
+	}
+	else{
+		*pc = *(pc+1);
+		pc++;
+		while(*(pc+1) != '"'){
+			*pc = *(pc+1);		
+			pc++;
+		}
+		*pc='\0';
+	}	
 }
