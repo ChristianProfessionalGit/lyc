@@ -3,8 +3,11 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <string.h>
+#include <stdbool.h>
 #include <math.h>
 #include "y.tab.h"
+#include "tercetos.h"
+#include "tercetos.c"
 int yystopparser=0;
 FILE *yyin;
 
@@ -16,6 +19,18 @@ FILE *yyin;
 extern char * yytext;
 int yyerror();
 int yylex();
+int fptr;
+int eptr;
+int tptr;
+int sptr;
+char varItoa[30];
+char varString[30];
+char varReal[30];
+char fptrString[3];
+char tptrString[3];
+char eptrString[3];
+char lptrString[3];
+char AuxindString[3];
 extern int yylineno;
 
 typedef struct
@@ -108,7 +123,7 @@ typedef struct
 %%
 
 programa:
-	sentencias {printf("Regla 0 - Programa es: sentencias\nCOMPILACION EXITOSA\n");};
+	sentencias {escribir_tercetos();printf("Regla 0 - Programa es: sentencias\nCOMPILACION EXITOSA\n");};
 sentencias:
     sentencias declaracion_tipos {printf("Regla 1 - Sentencia es: sentencias declaracion_tipos \n");};
     | declaracion_tipos  {printf("Regla 2 - Sentencia es: declaracion_tipos \n");};
@@ -209,44 +224,79 @@ comparador:
     | DISTINTO {printf("Regla 39 - comparador es: DISTINTO \n");};
     ;
 expresion:
-    termino {printf("Regla 40 - expresion es: termino \n");};
-    | expresion SUMA termino {printf("Regla 41 - expresion es: expresion SUMA termino \n");};
-    | expresion RESTA termino {printf("Regla 42 - expresion es: expresion RESTA termino \n");};
+    termino {
+		eptr=tptr;
+		printf("Regla 40 - expresion es: termino \n");
+			};
+    | expresion SUMA termino {
+				itoa(eptr,eptrString,10);
+				itoa(tptr,tptrString,10);
+				tptr=crear_terceto("+",eptrString,tptrString);
+				printf("Regla 41 - expresion es: expresion SUMA termino \n");
+							};
+    | expresion RESTA termino {
+				itoa(eptr,eptrString,10);
+				itoa(tptr,tptrString,10);
+				tptr=crear_terceto("-",eptrString,tptrString);
+				printf("Regla 42 - expresion es: expresion RESTA termino \n");
+							};
     ;
 termino:
-    factor {printf("Regla 43 - termino es: factor \n");};
-    | termino MULTI factor {printf("Regla 44 - termino es: termino MULTI factor \n");};
-    | termino DIVI factor {printf("Regla 45 - termino es: termino DIVI factor \n");};
+    factor {
+				tptr=fptr;
+				printf("Regla 43 - termino es: factor \n");
+			};
+    | termino MULTI factor {
+				itoa(tptr,tptrString,10);
+				itoa(fptr,fptrString,10);
+				tptr=crear_terceto("*",tptrString,fptrString);
+				printf("Regla 44 - termino es: termino MULTI factor \n");
+							};
+    | termino DIVI factor {
+				itoa(tptr,tptrString,10);
+				itoa(fptr,fptrString,10);
+				tptr=crear_terceto("/",tptrString,fptrString);
+				printf("Regla 45 - termino es: termino DIVI factor \n");
+							};
     ;
 factor:
     ID  {
+		char ultimoCaracter =$1[strlen($1)-1];
+            if(ultimoCaracter == '+' || ultimoCaracter == '-' || ultimoCaracter == '*' || ultimoCaracter == '/'){
+                $1[strlen($1)-1] = '\0'; //Remuevo el ultimo caracter que se lee de mas
+            }
 		buscar_en_lista(&lista_ts, yylval.string_val);
+		fptr=crear_terceto(dato.valor,"_","_");
 		printf("Regla 46 - factor es: ID \n");};
     | constante {printf("Regla 47 - factor es: constante \n");};
     | PAREN_ABIERTO expresion PAREN_CERRADO {printf("Regla 48 - factor es: PAREN_ABIERTO expresion PAREN_CERRADO  \n");};
     ;
 constante:
-    CONST_ENTERA  {
+    CONST_ENTERA  {	            
 					strcpy(dato.nombre, yytext);
 					strcpy(dato.valor, yytext);
 					strcpy(dato.tipodato, "CONST_ENTERA");
 					dato.longitud = 0;
 					insertar_en_ts(&lista_ts, &dato);
+					fptr=crear_terceto(dato.valor,"_","_");
 					printf("Regla 49 - constante es: CONST_ENTERA \n");};
-    | CONST_FLOTANTE {
+    | CONST_FLOTANTE {					
 					strcpy(dato.nombre, yytext);
 					strcpy(dato.valor, yytext);
 					strcpy(dato.tipodato, "CONST_FLOTANTE");
 					dato.longitud = 0;
 					insertar_en_ts(&lista_ts, &dato);
+					fptr=crear_terceto(dato.valor,"_","_");
 					printf("Regla 50 - constante es: CONST_FLOTANTE \n");};
     | CONST_CADENA {
+					
 					dato.longitud = strlen(yytext)-2;
 					strcpy(dato.nombre, yytext);
 					quitar_blancos_y_comillas(yytext);
 					strcpy(dato.valor, yytext);												
-					strcpy(dato.tipodato, "CONST_CADENA");												
-					insertar_en_ts(&lista_ts, &dato);
+					strcpy(dato.tipodato, "CONST_CADENA");
+					fptr=crear_terceto(dato.valor,"_","_");												
+					insertar_en_ts(&lista_ts, &dato);															
 					printf("Regla 51 - constante es: CONST_CADENA \n");};
     ;
 tipo_variable:

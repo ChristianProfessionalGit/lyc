@@ -4,6 +4,7 @@ PEPE:STRING
 ENDDEC
 hola=2555
 numero1=99.99
+numero3=234+423+7124*9421
 WRITE "HOLAdsadasd"
 READ PEPE
 IF (saldos > 0 OR saldos > 85 )
