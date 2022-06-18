@@ -6,16 +6,15 @@
 
 typedef struct
 {
-  int dni;
-  char car;
+  int nro_terceto;
 }t_algo;
 typedef t_algo  t_datoS;
 typedef struct S_NODO
 {
   t_datoS dato;
   struct S_NODO *sig;
-}t_nodo;
-typedef t_nodo* t_pilaD;
+}t_nodop;
+typedef t_nodop* t_pilaD;
 
 void crearPila(t_pilaD*);
 int pilaVacia(const t_pilaD* );

@@ -1,10 +1,13 @@
 DECVAR
-a,b,c,d:FLOAT
-PEPE:STRING
+a,b,c,d,numero1,numero2:FLOAT
+PEPE,mensaje:STRING
+numero3,numero4,hola:INTEGER
 ENDDEC
 hola=2555
 numero1=99.99
-numero3=234+423+7124*9421
+numero2= a*(b+4)
+numero3=234+(423+7124)*9421
+numero4= ((35/5+346-535*2)+544)*2
 WRITE "HOLAdsadasd"
 READ PEPE
 IF (saldos > 0 OR saldos > 85 )

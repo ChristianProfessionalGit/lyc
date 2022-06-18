@@ -3,20 +3,31 @@ a                                   FLOAT                                       
 b                                   FLOAT                                                0                                  
 c                                   FLOAT                                                0                                  
 d                                   FLOAT                                                0                                  
+numero1                             FLOAT                                                0                                  
+numero2                             FLOAT                                                0                                  
 PEPE                                STRING                                               0                                  
+mensaje                             STRING                                               0                                  
+numero3                             INTEGER                                              0                                  
+numero4                             INTEGER                                              0                                  
+hola                                INTEGER                                              0                                  
 2555                                CONST_ENTERA     2555                                0                                  
 99.99                               CONST_FLOTANTE   99.99                               0                                  
+4                                   CONST_ENTERA     4                                   0                                  
 234                                 CONST_ENTERA     234                                 0                                  
 423                                 CONST_ENTERA     423                                 0                                  
 7124                                CONST_ENTERA     7124                                0                                  
 9421                                CONST_ENTERA     9421                                0                                  
+35                                  CONST_ENTERA     35                                  0                                  
+5                                   CONST_ENTERA     5                                   0                                  
+346                                 CONST_ENTERA     346                                 0                                  
+535                                 CONST_ENTERA     535                                 0                                  
+2                                   CONST_ENTERA     2                                   0                                  
+544                                 CONST_ENTERA     544                                 0                                  
 "HOLAdsadasd"                       CONST_CADENA     HOLAdsadasd                         11                                 
 0                                   CONST_ENTERA     0                                   0                                  
 85                                  CONST_ENTERA     85                                  0                                  
 "Le queda poco saldo"               CONST_CADENA     Le_queda_poco_saldo                 19                                 
 "Hola mundoWWWWEWEQW"               CONST_CADENA     Hola_mundoWWWWEWEQW                 19                                 
-2                                   CONST_ENTERA     2                                   0                                  
-4                                   CONST_ENTERA     4                                   0                                  
 "ESTOY EN EL WHILEE"                CONST_CADENA     ESTOY_EN_EL_WHILEE                  18                                 
 "Q UE ONDAAAA"                      CONST_CADENA     Q_UE_ONDAAAA                        12                                 
 "Hola mundo"                        CONST_CADENA     Hola_mundo                          10                                 

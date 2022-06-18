@@ -8,6 +8,8 @@
 #include "y.tab.h"
 #include "tercetos.h"
 #include "tercetos.c"
+#include "PilaPrimitivaDinamica.h"
+#include "PilaPrimitivaDinamica.c"
 int yystopparser=0;
 FILE *yyin;
 
@@ -19,18 +21,22 @@ FILE *yyin;
 extern char * yytext;
 int yyerror();
 int yylex();
-int fptr;
-int eptr;
-int tptr;
-int sptr;
+int find;
+int eind;
+int tind;
+int aind;
+int sind;
+int auxEind;
+int auxTind;
 char varItoa[30];
 char varString[30];
 char varReal[30];
-char fptrString[3];
-char tptrString[3];
-char eptrString[3];
+char varComparador[4];
+char findString[3];
+char tindString[3];
+char eindString[3];
 char lptrString[3];
-char AuxindString[3];
+char auxEindString[3];
 extern int yylineno;
 
 typedef struct
@@ -68,6 +74,10 @@ typedef struct
 
 	t_lista lista_ts;
 	t_info dato;
+	t_pilaD pilaIf;
+	t_pilaD pilaWhile;
+	t_datoS datoPilaIf;
+	t_datoS datoPilaWhile;
 
 %}
 
@@ -190,16 +200,24 @@ while:
     WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA {printf("Regla 23 - While es: WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");};
     ;
 asignacion:
-    ID ASIGNACION expresion {printf("Regla 24 - ASIGNACION: ID = expresion\n");}    
+    ID ASIGNACION expresion {
+		buscar_en_lista(&lista_ts, $1);
+		itoa(eind,eindString,10);
+		aind=crear_terceto("=",$1,eindString);
+		printf("Regla 24 - ASIGNACION: ID = expresion\n");
+							}    
     ;
 entrada:
     READ ID {
 		buscar_en_lista(&lista_ts, yylval.string_val);
+		crear_terceto("READ",yylval.string_val,"_");
 		printf("Regla 25 - La entrada es: READ ID\n");}
     ;
 salida:
     WRITE constante {
 		buscar_en_lista(&lista_ts, yylval.string_val);
+		itoa(find,findString,10);
+		crear_terceto("WRITE",findString,"_");
 		printf("Regla 26 - La salida es: WRITE valor\n");}
     ;
 condiciones:
@@ -208,7 +226,11 @@ condiciones:
 	| NOT condicion {printf("Regla 29 - NOT CONDICION\n");};	
     ;
 condicion:
-    ID comparador constante {printf("Regla 30 - condicion es: ID comparador constante \n");};
+    ID comparador constante {
+		itoa(find,findString,10);
+		crear_terceto("CMP",$1,findString);
+		printf("Regla 30 - condicion es: ID comparador constante \n");
+		};
     | between {printf("Regla 31 - condicion es: between comparador constante \n");};
     ;
 operador_logico:
@@ -216,46 +238,70 @@ operador_logico:
     | OR {printf("Regla 33 - operador_logico es: OR \n");};
     ;
 comparador:
-    MENOR_IG {printf("Regla 34 - comparador es: MENOR_IG \n");};
-    | MENOR {printf("Regla 35 - comparador es: MENOR \n");};
-    | MAYOR_IG {printf("Regla 36 - comparador es: MAYOR_IG \n");};
-    | MAYOR {printf("Regla 37 - comparador es: MAYOR \n");};
-    | IGUAL {printf("Regla 38 - comparador es: IGUAL \n");};
-    | DISTINTO {printf("Regla 39 - comparador es: DISTINTO \n");};
+    MENOR_IG {
+		printf("Probandoooo algo %s",yytext);
+		strcpy(varComparador,"BGT");
+		printf("Regla 34 - comparador es: MENOR_IG \n");
+		};
+    | MENOR {
+		printf("Probandoooo algo %s",yytext);
+		strcpy(varComparador,"BGE");
+		printf("Regla 35 - comparador es: MENOR \n");
+		};
+    | MAYOR_IG {
+		printf("Probandoooo algo %s",yytext);
+		strcpy(varComparador,"BLT");
+		printf("Regla 36 - comparador es: MAYOR_IG \n");
+		};
+    | MAYOR {
+		printf("Probandoooo algo %s",yytext);
+		strcpy(varComparador,"BLE");
+		printf("Regla 37 - comparador es: MAYOR \n");
+		};
+    | IGUAL {
+		printf("Probandoooo algo %s",yytext);
+		strcpy(varComparador,"BNE");
+		printf("Regla 38 - comparador es: IGUAL \n");
+		};
+    | DISTINTO {
+		printf("Probandoooo algo %s",yytext);
+		strcpy(varComparador,"BEQ");
+		printf("Regla 39 - comparador es: DISTINTO \n");
+		};
     ;
 expresion:
     termino {
-		eptr=tptr;
+		eind=tind;
 		printf("Regla 40 - expresion es: termino \n");
 			};
     | expresion SUMA termino {
-				itoa(eptr,eptrString,10);
-				itoa(tptr,tptrString,10);
-				tptr=crear_terceto("+",eptrString,tptrString);
+				itoa(eind,eindString,10);
+				itoa(tind,tindString,10);
+				eind=crear_terceto("+",eindString,tindString);
 				printf("Regla 41 - expresion es: expresion SUMA termino \n");
 							};
     | expresion RESTA termino {
-				itoa(eptr,eptrString,10);
-				itoa(tptr,tptrString,10);
-				tptr=crear_terceto("-",eptrString,tptrString);
+				itoa(eind,eindString,10);
+				itoa(tind,tindString,10);
+				eind=crear_terceto("-",eindString,tindString);
 				printf("Regla 42 - expresion es: expresion RESTA termino \n");
 							};
     ;
 termino:
     factor {
-				tptr=fptr;
+				tind=find;
 				printf("Regla 43 - termino es: factor \n");
 			};
     | termino MULTI factor {
-				itoa(tptr,tptrString,10);
-				itoa(fptr,fptrString,10);
-				tptr=crear_terceto("*",tptrString,fptrString);
+				itoa(tind,tindString,10);
+				itoa(find,findString,10);
+				tind=crear_terceto("*",tindString,findString);
 				printf("Regla 44 - termino es: termino MULTI factor \n");
 							};
     | termino DIVI factor {
-				itoa(tptr,tptrString,10);
-				itoa(fptr,fptrString,10);
-				tptr=crear_terceto("/",tptrString,fptrString);
+				itoa(tind,tindString,10);
+				itoa(find,findString,10);
+				tind=crear_terceto("/",tindString,findString);
 				printf("Regla 45 - termino es: termino DIVI factor \n");
 							};
     ;
@@ -266,10 +312,10 @@ factor:
                 $1[strlen($1)-1] = '\0'; //Remuevo el ultimo caracter que se lee de mas
             }
 		buscar_en_lista(&lista_ts, yylval.string_val);
-		fptr=crear_terceto(dato.valor,"_","_");
+		find=crear_terceto(yylval.string_val,"_","_");
 		printf("Regla 46 - factor es: ID \n");};
     | constante {printf("Regla 47 - factor es: constante \n");};
-    | PAREN_ABIERTO expresion PAREN_CERRADO {printf("Regla 48 - factor es: PAREN_ABIERTO expresion PAREN_CERRADO  \n");};
+    | PAREN_ABIERTO {auxEind=eind;auxTind=tind;} expresion PAREN_CERRADO {find=eind;eind=auxEind;tind=auxTind;printf("Regla 48 - factor es: PAREN_ABIERTO expresion PAREN_CERRADO  \n");};
     ;
 constante:
     CONST_ENTERA  {	            
@@ -278,7 +324,12 @@ constante:
 					strcpy(dato.tipodato, "CONST_ENTERA");
 					dato.longitud = 0;
 					insertar_en_ts(&lista_ts, &dato);
-					fptr=crear_terceto(dato.valor,"_","_");
+					datoPilaIf.nro_terceto=$1;
+					if(apilarD(&pilaIf,&datoPilaIf)==NO_HAY_MEMORIA){
+						printf("No hay memoria para insertar %d en la pila\n",$1);
+						exit(1);
+					}
+					find=crear_terceto(dato.valor,"_","_");
 					printf("Regla 49 - constante es: CONST_ENTERA \n");};
     | CONST_FLOTANTE {					
 					strcpy(dato.nombre, yytext);
@@ -286,7 +337,7 @@ constante:
 					strcpy(dato.tipodato, "CONST_FLOTANTE");
 					dato.longitud = 0;
 					insertar_en_ts(&lista_ts, &dato);
-					fptr=crear_terceto(dato.valor,"_","_");
+					find=crear_terceto(dato.valor,"_","_");
 					printf("Regla 50 - constante es: CONST_FLOTANTE \n");};
     | CONST_CADENA {
 					
@@ -295,7 +346,7 @@ constante:
 					quitar_blancos_y_comillas(yytext);
 					strcpy(dato.valor, yytext);												
 					strcpy(dato.tipodato, "CONST_CADENA");
-					fptr=crear_terceto(dato.valor,"_","_");												
+					find=crear_terceto(dato.valor,"_","_");												
 					insertar_en_ts(&lista_ts, &dato);															
 					printf("Regla 51 - constante es: CONST_CADENA \n");};
     ;
@@ -342,10 +393,18 @@ int main(int argc, char *argv[])
   else
   {
 	generar_ts(&lista_ts);
-
+	crearPila(&pilaIf);
 	yyparse();
 
 	grabar_lista_en_archivo(&lista_ts);
+	
+	if(verTopeD(&pilaIf,&datoPilaIf)== PILA_VACIA){
+		printf("Pila vacia");
+	}
+	else{
+		printf("El dato de la pila es %d", datoPilaIf.nro_terceto);
+	}
+	
   	fclose(yyin);
   }
   return 0;

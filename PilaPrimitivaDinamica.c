@@ -11,15 +11,15 @@ int pilaVacia(const t_pilaD *p)
 }
 int pilaLlena(const t_pilaD *p)
 {
-  t_nodo *aux;
-  aux=(t_nodo*)malloc(sizeof(t_nodo));
+  t_nodop *aux;
+  aux=(t_nodop*)malloc(sizeof(t_nodop));
   free(aux);
   return aux==NULL;
 }
 int apilarD(t_pilaD *p,const t_datoS *d)
 {
-  t_nodo *aux;
-  aux=(t_nodo*)malloc(sizeof(t_nodo));
+  t_nodop *aux;
+  aux=(t_nodop*)malloc(sizeof(t_nodop));
   if(!aux)
     return  NO_HAY_MEMORIA;
   aux->dato=*d;
@@ -31,7 +31,7 @@ int desapilarD(t_pilaD *p,t_datoS *d)
 {
   if(!*p)
     return PILA_VACIA;
-  t_nodo *aux;
+  t_nodop *aux;
   aux=*p;
   *d=aux->dato;
   *p=aux->sig;
@@ -47,7 +47,7 @@ int verTopeD(const t_pilaD *p, t_datoS *d)
 }
 void vaciarPilaD(t_pilaD *p)
 {
-  t_nodo *aux;
+  t_nodop *aux;
   while(*p)
   {
     aux=*p;
