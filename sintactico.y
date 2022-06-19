@@ -32,6 +32,7 @@ char varItoa[30];
 char varString[30];
 char varReal[30];
 char varComparador[4];
+char varOperador[4];
 char findString[3];
 char tindString[3];
 char eindString[3];
@@ -194,7 +195,62 @@ lista_variables:
 								printf("Regla 21 - lista_variables es: ID \n");};
     ;
 if:
-    IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA {printf("Regla 22 - IF es: IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");};
+    IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA
+		{
+			t_datoS aux;
+			if(strcmp(varOperador,"OR")==0){
+				desapilarD(&pilaIf,&aux);
+				desapilarD(&pilaIf,&datoPilaIf);
+				if(apilarD(&pilaIf,&aux)==NO_HAY_MEMORIA){
+					printf("No hay memoria para insertar un elemento en la pila\n");
+					exit(1);
+				}
+				char valorActual[3];
+				itoa(obtenerIndiceTercetos(),valorActual,10);
+				strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+				strcpy(varComparador,vector_tercetos[datoPilaIf.nro_terceto].atr1);
+				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
+                                    
+                char contarioDelComparador[4];
+				printf("El comparador tiene %s\n",varComparador);
+                if (strcmp(varComparador, "BLT") == 0) 
+                {
+                    strcpy(contarioDelComparador,"BGE");
+                } 
+                else if (strcmp(varComparador, "BLE") == 0)
+                {
+                    strcpy(contarioDelComparador,"BGT");
+                }
+                else if (strcmp(varComparador, "BGT") == 0)
+                {
+                    strcpy(contarioDelComparador,"BLE");
+                }
+                else if (strcmp(varComparador, "BGE") == 0)
+                {
+                    strcpy(contarioDelComparador,"BLT");
+                }
+				else if (strcmp(varComparador, "BNE") == 0)
+                {
+                    strcpy(contarioDelComparador,"BEQ");
+                }
+                else if (strcmp(varComparador, "BEQ") == 0)
+                {
+                	strcpy(contarioDelComparador,"BNE");
+                }
+                
+                strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr1,contarioDelComparador);
+                                    
+			}
+		}
+	 sentencias LLAVE_CERRADA {
+		while(!pilaVacia(&pilaIf)){
+			desapilarD(&pilaIf,&datoPilaIf);		
+			char valorActual[3];
+			itoa(obtenerIndiceTercetos(),valorActual,10);
+			strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+		}
+		printf("Regla 22 - IF es: IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");
+		};
     ;
 while:
     WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA {printf("Regla 23 - While es: WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");};
@@ -229,42 +285,54 @@ condicion:
     ID comparador constante {
 		itoa(find,findString,10);
 		crear_terceto("CMP",$1,findString);
+		int num_terceto=crear_terceto(varComparador,"_","_");
+		datoPilaIf.nro_terceto=num_terceto;
+		if(apilarD(&pilaIf,&datoPilaIf)==NO_HAY_MEMORIA){
+			printf("No hay memoria para insertar un elemento en la pila\n");
+			exit(1);
+		}
 		printf("Regla 30 - condicion es: ID comparador constante \n");
 		};
     | between {printf("Regla 31 - condicion es: between comparador constante \n");};
     ;
 operador_logico:
-    AND {printf("Regla 32 - operador_logico es: AND \n");};
-    | OR {printf("Regla 33 - operador_logico es: OR \n");};
+    AND {
+		strcpy(varOperador,"AND");
+		printf("Regla 32 - operador_logico es: AND \n");
+		};
+    | OR {
+		strcpy(varOperador,"OR");
+		printf("Regla 33 - operador_logico es: OR \n");
+		};
     ;
 comparador:
     MENOR_IG {
-		printf("Probandoooo algo %s",yytext);
+		
 		strcpy(varComparador,"BGT");
 		printf("Regla 34 - comparador es: MENOR_IG \n");
 		};
     | MENOR {
-		printf("Probandoooo algo %s",yytext);
+		
 		strcpy(varComparador,"BGE");
 		printf("Regla 35 - comparador es: MENOR \n");
 		};
     | MAYOR_IG {
-		printf("Probandoooo algo %s",yytext);
+		
 		strcpy(varComparador,"BLT");
 		printf("Regla 36 - comparador es: MAYOR_IG \n");
 		};
     | MAYOR {
-		printf("Probandoooo algo %s",yytext);
+		
 		strcpy(varComparador,"BLE");
 		printf("Regla 37 - comparador es: MAYOR \n");
 		};
     | IGUAL {
-		printf("Probandoooo algo %s",yytext);
+		
 		strcpy(varComparador,"BNE");
 		printf("Regla 38 - comparador es: IGUAL \n");
 		};
     | DISTINTO {
-		printf("Probandoooo algo %s",yytext);
+		
 		strcpy(varComparador,"BEQ");
 		printf("Regla 39 - comparador es: DISTINTO \n");
 		};
@@ -323,12 +391,7 @@ constante:
 					strcpy(dato.valor, yytext);
 					strcpy(dato.tipodato, "CONST_ENTERA");
 					dato.longitud = 0;
-					insertar_en_ts(&lista_ts, &dato);
-					datoPilaIf.nro_terceto=$1;
-					if(apilarD(&pilaIf,&datoPilaIf)==NO_HAY_MEMORIA){
-						printf("No hay memoria para insertar %d en la pila\n",$1);
-						exit(1);
-					}
+					insertar_en_ts(&lista_ts, &dato);					
 					find=crear_terceto(dato.valor,"_","_");
 					printf("Regla 49 - constante es: CONST_ENTERA \n");};
     | CONST_FLOTANTE {					
@@ -396,14 +459,7 @@ int main(int argc, char *argv[])
 	crearPila(&pilaIf);
 	yyparse();
 
-	grabar_lista_en_archivo(&lista_ts);
-	
-	if(verTopeD(&pilaIf,&datoPilaIf)== PILA_VACIA){
-		printf("Pila vacia");
-	}
-	else{
-		printf("El dato de la pila es %d", datoPilaIf.nro_terceto);
-	}
+	grabar_lista_en_archivo(&lista_ts);	
 	
   	fclose(yyin);
   }

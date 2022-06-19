@@ -25,10 +25,21 @@ WHILE (saldos > 0)
 mensaje = "ESTOY EN EL WHILEE"
 WRITE "Q UE ONDAAAA"
 }
+IF (saldos == 0)
+{
+mensaje = "ESTOY EN EL WHILEE"
+WRITE "Q UE ONDAAAA"
+}
 IF (NOT saldos >= 0)
 {
 mensaje = "Le queda poco saldo"
 WRITE "Hola mundo"
+}
+IF ( saldo >= 0 OR saldo == 1 ){
+    mensaje="funciona el if wiii"
+}
+IF ( saldo != 0 AND saldo != 1 ){
+    mensaje="agggg no funciona"
 }
 TAKE (-    ; 4  ;   [2 ; 12 ; 24 ; 48] )
 -/ esto es un comentario /-

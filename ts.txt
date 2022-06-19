@@ -31,3 +31,6 @@ hola                                INTEGER                                     
 "ESTOY EN EL WHILEE"                CONST_CADENA     ESTOY_EN_EL_WHILEE                  18                                 
 "Q UE ONDAAAA"                      CONST_CADENA     Q_UE_ONDAAAA                        12                                 
 "Hola mundo"                        CONST_CADENA     Hola_mundo                          10                                 
+1                                   CONST_ENTERA     1                                   0                                  
+"funciona el if wiii"               CONST_CADENA     funciona_el_if_wiii                 19                                 
+"agggg no funciona"                 CONST_CADENA     agggg_no_funciona                   17                                 
