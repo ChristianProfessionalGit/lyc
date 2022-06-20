@@ -10,6 +10,9 @@ mensaje                             STRING                                      
 numero3                             INTEGER                                              0                                  
 numero4                             INTEGER                                              0                                  
 hola                                INTEGER                                              0                                  
+saldos                              INTEGER                                              0                                  
+saldo                               INTEGER                                              0                                  
+variable                            INTEGER                                              0                                  
 2555                                CONST_ENTERA     2555                                0                                  
 99.99                               CONST_FLOTANTE   99.99                               0                                  
 4                                   CONST_ENTERA     4                                   0                                  
@@ -34,3 +37,9 @@ hola                                INTEGER                                     
 1                                   CONST_ENTERA     1                                   0                                  
 "funciona el if wiii"               CONST_CADENA     funciona_el_if_wiii                 19                                 
 "agggg no funciona"                 CONST_CADENA     agggg_no_funciona                   17                                 
+123                                 CONST_ENTERA     123                                 0                                  
+"probemos el NOT condicion"         CONST_CADENA     probemos_el_NOT_condicion           25                                 
+"while con saltos"                  CONST_CADENA     while_con_saltos                    16                                 
+267                                 CONST_ENTERA     267                                 0                                  
+145                                 CONST_ENTERA     145                                 0                                  
+"while con saltos y OR"             CONST_CADENA     while_con_saltos_y_OR               21                                 

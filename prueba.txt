@@ -1,7 +1,7 @@
 DECVAR
 a,b,c,d,numero1,numero2:FLOAT
 PEPE,mensaje:STRING
-numero3,numero4,hola:INTEGER
+numero3,numero4,hola,saldos,saldo,variable:INTEGER
 ENDDEC
 hola=2555
 numero1=99.99
@@ -35,11 +35,24 @@ IF (NOT saldos >= 0)
 mensaje = "Le queda poco saldo"
 WRITE "Hola mundo"
 }
-IF ( saldo >= 0 OR saldo == 1 ){
+IF ( saldo != 0 OR saldo == 1 ){
     mensaje="funciona el if wiii"
 }
 IF ( saldo != 0 AND saldo != 1 ){
     mensaje="agggg no funciona"
+}
+IF ( NOT variable <= 123){
+    mensaje="probemos el NOT condicion"
+}
+WHILE (saldo != 0 AND saldo != 1)
+{
+mensaje = "while con saltos"
+WRITE "Q UE ONDAAAA"
+}
+WHILE (saldo > 267 OR saldo == 145)
+{
+mensaje = "while con saltos y OR"
+WRITE "Q UE ONDAAAA"
 }
 TAKE (-    ; 4  ;   [2 ; 12 ; 24 ; 48] )
 -/ esto es un comentario /-

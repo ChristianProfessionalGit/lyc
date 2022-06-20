@@ -211,34 +211,34 @@ if:
 				strcpy(varComparador,vector_tercetos[datoPilaIf.nro_terceto].atr1);
 				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
                                     
-                char contarioDelComparador[4];
+                char contrarioDelComparador[4];
 				printf("El comparador tiene %s\n",varComparador);
                 if (strcmp(varComparador, "BLT") == 0) 
                 {
-                    strcpy(contarioDelComparador,"BGE");
+                    strcpy(contrarioDelComparador,"BGE");
                 } 
                 else if (strcmp(varComparador, "BLE") == 0)
                 {
-                    strcpy(contarioDelComparador,"BGT");
+                    strcpy(contrarioDelComparador,"BGT");
                 }
                 else if (strcmp(varComparador, "BGT") == 0)
                 {
-                    strcpy(contarioDelComparador,"BLE");
+                    strcpy(contrarioDelComparador,"BLE");
                 }
                 else if (strcmp(varComparador, "BGE") == 0)
                 {
-                    strcpy(contarioDelComparador,"BLT");
+                    strcpy(contrarioDelComparador,"BLT");
                 }
 				else if (strcmp(varComparador, "BNE") == 0)
                 {
-                    strcpy(contarioDelComparador,"BEQ");
+                    strcpy(contrarioDelComparador,"BEQ");
                 }
                 else if (strcmp(varComparador, "BEQ") == 0)
                 {
-                	strcpy(contarioDelComparador,"BNE");
+                	strcpy(contrarioDelComparador,"BNE");
                 }
                 
-                strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr1,contarioDelComparador);
+                strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr1,contrarioDelComparador);
                                     
 			}
 		}
@@ -253,7 +253,78 @@ if:
 		};
     ;
 while:
-    WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA {printf("Regla 23 - While es: WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");};
+    WHILE PAREN_ABIERTO {
+		int num_terceto=crear_terceto("While","_","_");
+		datoPilaWhile.nro_terceto=num_terceto;
+		if(apilarD(&pilaWhile,&datoPilaWhile)==NO_HAY_MEMORIA){
+					printf("No hay memoria para insertar un elemento en la pila\n");
+					exit(1);
+		}
+	}
+	 condiciones PAREN_CERRADO LLAVE_ABIERTA
+	  {
+			t_datoS aux;
+			if(strcmp(varOperador,"OR")==0){
+				desapilarD(&pilaIf,&aux);
+				desapilarD(&pilaIf,&datoPilaIf);
+				if(apilarD(&pilaIf,&aux)==NO_HAY_MEMORIA){
+					printf("No hay memoria para insertar un elemento en la pila\n");
+					exit(1);
+				}
+				char valorActual[3];
+				itoa(obtenerIndiceTercetos(),valorActual,10);
+				strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+				strcpy(varComparador,vector_tercetos[datoPilaIf.nro_terceto].atr1);
+				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
+                                    
+                char contrarioDelComparador[4];
+				printf("El comparador tiene %s\n",varComparador);
+                if (strcmp(varComparador, "BLT") == 0) 
+                {
+                    strcpy(contrarioDelComparador,"BGE");
+                } 
+                else if (strcmp(varComparador, "BLE") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BGT");
+                }
+                else if (strcmp(varComparador, "BGT") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BLE");
+                }
+                else if (strcmp(varComparador, "BGE") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BLT");
+                }
+				else if (strcmp(varComparador, "BNE") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BEQ");
+                }
+                else if (strcmp(varComparador, "BEQ") == 0)
+                {
+                	strcpy(contrarioDelComparador,"BNE");
+                }
+                
+                strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr1,contrarioDelComparador);
+                                    
+			}
+		}
+	  sentencias LLAVE_CERRADA {
+		int num_terceto=crear_terceto("BI","_","_");
+		char valorActual[3];
+		while(!pilaVacia(&pilaIf)){
+			desapilarD(&pilaIf,&datoPilaIf);		
+			
+			itoa(obtenerIndiceTercetos(),valorActual,10);
+			strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+		}
+		if(desapilarD(&pilaWhile,&datoPilaWhile)==PILA_VACIA){
+			printf("No hay elementos en la pila\n");
+			exit(1);
+		}
+		itoa(datoPilaWhile.nro_terceto,valorActual,10);
+		strcpy(vector_tercetos[num_terceto].atr2,valorActual);
+		 printf("Regla 23 - While es: WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");
+		 };
     ;
 asignacion:
     ID ASIGNACION expresion {
@@ -279,10 +350,52 @@ salida:
 condiciones:
     condicion operador_logico condicion  {printf("Regla 27 - condicion operador_logico condicion \n");};
     | condicion {printf("Regla 28 - CONDICION\n");};
-	| NOT condicion {printf("Regla 29 - NOT CONDICION\n");};	
+	| NOT condicion {
+		if(desapilarD(&pilaIf,&datoPilaIf)==PILA_VACIA){
+			printf("No hay elementos en la pila\n");
+			exit(1);
+		}
+		strcpy(varComparador,vector_tercetos[datoPilaIf.nro_terceto].atr1);
+		/*Reescribo el terceto cambiando el comparador por su opuesto*/
+                                    
+                char contrarioDelComparador[4];
+				printf("El comparador tiene %s\n",varComparador);
+                if (strcmp(varComparador, "BLT") == 0) 
+                {
+                    strcpy(contrarioDelComparador,"BGE");
+                } 
+                else if (strcmp(varComparador, "BLE") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BGT");
+                }
+                else if (strcmp(varComparador, "BGT") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BLE");
+                }
+                else if (strcmp(varComparador, "BGE") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BLT");
+                }
+				else if (strcmp(varComparador, "BNE") == 0)
+                {
+                    strcpy(contrarioDelComparador,"BEQ");
+                }
+                else if (strcmp(varComparador, "BEQ") == 0)
+                {
+                	strcpy(contrarioDelComparador,"BNE");
+                }
+                
+                strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr1,contrarioDelComparador);
+				if(apilarD(&pilaIf,&datoPilaIf)==NO_HAY_MEMORIA){
+					printf("No hay memoria para insertar un elemento en la pila\n");
+					exit(1);
+				}
+		printf("Regla 29 - NOT CONDICION\n");
+		};	
     ;
 condicion:
     ID comparador constante {
+		buscar_en_lista(&lista_ts, $1);
 		itoa(find,findString,10);
 		crear_terceto("CMP",$1,findString);
 		int num_terceto=crear_terceto(varComparador,"_","_");
