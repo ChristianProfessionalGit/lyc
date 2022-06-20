@@ -555,7 +555,7 @@ operadores:
     | DIVI {printf("Regla 62 - operadores es:DIVI \n");};
     ;
 take:
-    TAKE PAREN_ABIERTO operadores PUNTO_COMA factor PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO {printf("Regla 63 - TAKE es:PAREN_ABIERTO operadores PUNTO_COMA factor PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO \n");}
+    TAKE PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO {printf("Regla 63 - TAKE es:PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO \n");}
     ;
 
 %%

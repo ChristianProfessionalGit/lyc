@@ -1,0 +1,85 @@
+reglas para el take:
+1.S -> T
+2.T -> TAKE ( OP {@cont=0}
+ ; cte { @aux=cte,  crear_terceto(CMP,@aux,@cont), crear_terceto(BGT,_,_) , apilarT(Nº de terceto),
+}
+; [ LC ] ) { int vec[@cont], while(!pilavaciaX()){int i=0, vec[i]=desapilarX()} lind=crear_terceto(vec[@cont],_,_)
+for(i=@cont-1,i>=0,i--)
+{ lind=crear_terceto(opind,lind,vec[i]) }, crear_terceto(=,@result,lind), desapilarT(tope de la pila), escribir en T nº terceto actual + 1,
+crear_terceto(CMP,@cont,0), crear_terceto(BNE,_,_), apilarT(Nº de terceto),crear_terceceto(=,@result,0), 
+desapilarT(tope de la pila), escribir en T nº terceto actual + 1, crear_terceto(CMP,@aux,@cont) , crear_terceto(BLT,_,_),apilarT(Nº de terceto),
+ crear_terceto(PRINT,"error",_) , escribir en T nº terceto actual + 1
+}
+3.OP -> + {opind=crear_terceto(+,_,_)}
+4.OP -> - {opind=crear_terceto(-,_,_)}
+5.OP -> * {opind=crear_terceto(*,_,_)}
+6.OP -> / {opind=crear_terceto(/,_,_)}
+7.LC -> LC ; cte {apilarX(cte), @cont++}
+8.LC -> cte {apilarX(cte), @cont++}
+
+Pseudocodigo de: TAKE (*   ; 3  ;   [2 ; 12 ; 24 ; 48] )
+@cont=0
+@aux=3
+
+lista += 2 // cargar elemento en la lista
+@cont++
+lista += 12
+@cont++
+-
+-
+-
+si(@aux <= @cont)
+
+@result= 2*12*24*48
+
+sino si (@cont==0)
+@result=0
+
+sino (@aux > @cont)
+PRINT "error"
+
+
+[0](*,_,_)<-opind
+[1](=,@aux,3)
+[2](CMP,@aux,@cont)
+[3](BGT,8,_)
+[4](2,_,_)<-lind
+[4]([0],[4],12)<-lind
+[5]([0],[4],24)<-lind
+[6]([0],[5],48)<-lind
+[7](=,@result,[6])
+[8](CMP,@cont,0)
+[9](BNE,11,_)
+[10](=,@result,0)
+[11](CMP,@aux,@cont)
+[12](BLT,14)
+[13](PRINT,"error",_)
+
+reglas para el between:
+1.S -> B
+2.B -> BETWEEN ( id { @var=id} , [E{@exp1=eind}	;E{@exp2=eind}] )
+{ @respuesta=1 , crear_terceto(CMP,@var,@exp1),crear_terceto(BLT,_,_), apilarT(Nº de terceto), crear_terceto(CMP,@var,@exp2),crear_terceto(BGT,_,_),
+apilarT(Nº de terceto), crear_terceto(=,@respuesta,0), while(!pilavaciaT()){desapilarT(tope de la pila), escribis en T nº terceto + 1},
+}
+
+Pseudocodigo de between para if( BETWEEN (a, [2 ; a*(b+4)])){ a=3 }
+
+@var=a
+@exp1=2
+@exp2=a*(b+4)
+@respuesta=1
+si (@var >= @exp1)
+ si (@var <= @exp2)
+  @respuesta=0
+
+
+[0](CMP,@var,@exp1)
+[1](BLT,5,_)
+[2](CMP,@var,@exp2)
+[3](BGT,5,_)
+[4](=,@respuesta,0)
+[5](CMP,@resultado,0)
+[6](BNE,9)
+[7](3,_,_)
+[8](=,a,3)
+[9]()

@@ -55,6 +55,7 @@ mensaje = "while con saltos y OR"
 WRITE "Q UE ONDAAAA"
 }
 TAKE (-    ; 4  ;   [2 ; 12 ; 24 ; 48] )
+TAKE (-    ; 12  ;   [2 ; 12 ; 24 ; 48] )
 -/ esto es un comentario /-
 -//-
 -/ esto es un comentario y dentro hay otro -/comentario/- /-
