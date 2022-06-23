@@ -6,6 +6,10 @@ d                                   FLOAT                                       
 PEPE                                STRING                                               0                                  
 2555                                CONST_ENTERA     2555                                0                                  
 99.99                               CONST_FLOTANTE   99.99                               0                                  
+234                                 CONST_ENTERA     234                                 0                                  
+423                                 CONST_ENTERA     423                                 0                                  
+7124                                CONST_ENTERA     7124                                0                                  
+9421                                CONST_ENTERA     9421                                0                                  
 "HOLAdsadasd"                       CONST_CADENA     HOLAdsadasd                         11                                 
 0                                   CONST_ENTERA     0                                   0                                  
 85                                  CONST_ENTERA     85                                  0                                  
