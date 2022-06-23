@@ -26,6 +26,7 @@ int eind;
 int tind;
 int aind;
 int sind;
+int lind;
 int auxEind;
 int auxTind;
 char varItoa[30];
@@ -33,6 +34,7 @@ char varString[30];
 char varReal[30];
 char varComparador[4];
 char varOperador[4];
+char opindString[3];
 char findString[3];
 char tindString[3];
 char eindString[3];
@@ -77,8 +79,12 @@ typedef struct
 	t_info dato;
 	t_pilaD pilaIf;
 	t_pilaD pilaWhile;
+	t_pilaD pilaTake;
+	t_pilaD pilaBetween;
 	t_datoS datoPilaIf;
 	t_datoS datoPilaWhile;
+	t_datoS datoPilaTake;
+	t_datoS datoPilaBetween;
 
 %}
 
@@ -212,7 +218,7 @@ if:
 				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
                                     
                 char contrarioDelComparador[4];
-				printf("El comparador tiene %s\n",varComparador);
+				
                 if (strcmp(varComparador, "BLT") == 0) 
                 {
                     strcpy(contrarioDelComparador,"BGE");
@@ -278,7 +284,7 @@ while:
 				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
                                     
                 char contrarioDelComparador[4];
-				printf("El comparador tiene %s\n",varComparador);
+				
                 if (strcmp(varComparador, "BLT") == 0) 
                 {
                     strcpy(contrarioDelComparador,"BGE");
@@ -359,7 +365,7 @@ condiciones:
 		/*Reescribo el terceto cambiando el comparador por su opuesto*/
                                     
                 char contrarioDelComparador[4];
-				printf("El comparador tiene %s\n",varComparador);
+				
                 if (strcmp(varComparador, "BLT") == 0) 
                 {
                     strcpy(contrarioDelComparador,"BGE");
@@ -546,13 +552,28 @@ between:
     ;
 lista_constantes:
     lista_constantes PUNTO_COMA CONST_ENTERA {printf("Regla 58 - lista_constantes es: lista_constantes PUNTO_COMA CONST_ENTERA \n");};
-    | CONST_ENTERA {printf("Regla 58 - lista_constantes es:CONST_ENTERA \n");};
+    | CONST_ENTERA {
+		printf("Probemos que tiene esto %s\n",yytext);
+		printf("Regla 58 - lista_constantes es:CONST_ENTERA \n");
+		};
     ;
 operadores:
-    SUMA {printf("Regla 59 - operadores es:SUMA \n");};
-    | RESTA {printf("Regla 60 - operadores es:RESTA \n");};
-    | MULTI {printf("Regla 61 - operadores es:MULTI \n");};
-    | DIVI {printf("Regla 62 - operadores es:DIVI \n");};
+    SUMA {
+		strcpy(opindString,"+");
+		printf("Regla 59 - operadores es:SUMA \n");
+		};
+    | RESTA {
+		strcpy(opindString,"-");
+		printf("Regla 60 - operadores es:RESTA \n");
+		};
+    | MULTI {
+		strcpy(opindString,"*");
+		printf("Regla 61 - operadores es:MULTI \n");
+	};
+    | DIVI {
+		strcpy(opindString,"/");
+		printf("Regla 62 - operadores es:DIVI \n");
+	};
     ;
 take:
     TAKE PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO {printf("Regla 63 - TAKE es:PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO \n");}
