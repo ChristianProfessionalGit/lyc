@@ -29,6 +29,7 @@ int sind;
 int lind;
 int auxEind;
 int auxTind;
+int auxCont = 0;
 char varItoa[30];
 char varString[30];
 char varReal[30];
@@ -38,8 +39,9 @@ char opindString[3];
 char findString[3];
 char tindString[3];
 char eindString[3];
-char lptrString[3];
+char lindString[3];
 char auxEindString[3];
+char aux[4];
 extern int yylineno;
 
 typedef struct
@@ -49,13 +51,15 @@ typedef struct
 		char valor[TAM];
 		int longitud;
 	}t_info;
-
+	
 	typedef struct s_nodo
 	{
 		t_info info;
 		struct s_nodo *sSig;
 	}t_nodo;
-
+	typedef struct {
+		char valor[4];
+	}t_contantes;
 	typedef t_nodo *t_lista;
 	char tipoDato[20];
 	int contadorDeclVar;
@@ -85,6 +89,8 @@ typedef struct
 	t_datoS datoPilaWhile;
 	t_datoS datoPilaTake;
 	t_datoS datoPilaBetween;
+
+	t_contantes contantes[100];
 
 %}
 
@@ -551,11 +557,23 @@ between:
     BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO {printf("Regla 57 - BETWEEN es: BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO \n");}
     ;
 lista_constantes:
-    lista_constantes PUNTO_COMA CONST_ENTERA {printf("Regla 58 - lista_constantes es: lista_constantes PUNTO_COMA CONST_ENTERA \n");};
-    | CONST_ENTERA {
+	lista_constantes_llena ;
+	| CORCH_ABIERTO {printf("Regla 58 - lista_constantes es: vacia \n");};
+	;
+lista_constantes_llena:
+    lista_constantes_llena PUNTO_COMA CONST_ENTERA {
 		printf("Probemos que tiene esto %s\n",yytext);
-		printf("Regla 58 - lista_constantes es:CONST_ENTERA \n");
+		strcpy(contantes[auxCont].valor,yytext);	
+		auxCont++;	
+		printf("Regla 58 - lista_constantes es: lista_constantes PUNTO_COMA CONST_ENTERA \n");
 		};
+    | CORCH_ABIERTO CONST_ENTERA {
+		printf("Probemos que tiene esto %s\n",yytext);
+		strcpy(contantes[auxCont].valor,yytext);	
+		
+		auxCont++;	
+		printf("Regla 58 - lista_constantes es:CONST_ENTERA \n");
+		};	
     ;
 operadores:
     SUMA {
@@ -576,7 +594,43 @@ operadores:
 	};
     ;
 take:
-    TAKE PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO {printf("Regla 63 - TAKE es:PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO \n");}
+    TAKE PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA {printf("La constante es %s\n",yytext);strcpy(aux,yytext);} PUNTO_COMA lista_constantes CORCH_CERRADO PAREN_CERRADO {
+		
+		char contString[4];
+		itoa(auxCont,contString,10);
+		int resultado,i;
+		crear_terceto("TAKE","_","_");
+		if(auxCont == 0 ){
+			printf("Se puede realizar el TAKE\n");
+			lind=crear_terceto("=","@resultado","0");
+			itoa(lind,lindString,10);
+			crear_terceto("PRINT",lindString,"_");
+		}
+		else if(strcmp(contString,aux)>=0){
+			lind=crear_terceto(contantes[0].valor,"_","_");
+			int elementos;
+			elementos=atoi(aux);
+			printf("El atoi funciona %d\n",elementos);
+			if(elementos > 1){
+				for(i=1;i<elementos;i++){
+					itoa(lind,lindString,10);
+					lind=crear_terceto(opindString,lindString,contantes[i].valor);
+				}				
+			}
+			itoa(lind,lindString,10);
+			lind=crear_terceto("=","@resultado",lindString);
+			itoa(lind,lindString,10);
+			crear_terceto("PRINT",lindString,"_");
+		}
+		else{
+			printf("No se puede realizar el TAKE\n");
+			crear_terceto("PRINT","ERROR","_");
+		}
+		auxCont=0;
+		
+		printf("Regla 63 - TAKE es:PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA PUNTO_COMA CORCH_ABIERTO lista_constantes CORCH_CERRADO PAREN_CERRADO \n");
+		
+		}
     ;
 
 %%
