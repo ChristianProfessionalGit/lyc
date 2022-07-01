@@ -554,7 +554,7 @@ valor:
     | CONST_CADENA STRING {printf("Regla 56 - valor es: CONST_CADENA STRING \n");};
     ;
 between:
-    BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO {printf("Regla 57 - BETWEEN es: BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO \n");}
+    BETWEEN PAREN_ABIERTO ID COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO {printf("Regla 57 - BETWEEN es: BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO \n");}
     ;
 lista_constantes:
 	lista_constantes_llena ;
@@ -598,19 +598,19 @@ take:
 		
 		char contString[4];
 		itoa(auxCont,contString,10);
-		int resultado,i;
-		crear_terceto("TAKE","_","_");
+		int resultado,i,elementos;		
+	    elementos=atoi(aux);
+		crear_terceto("TAKE","_","_");		
 		if(auxCont == 0 ){
 			printf("Se puede realizar el TAKE\n");
 			lind=crear_terceto("=","@resultado","0");
 			itoa(lind,lindString,10);
 			crear_terceto("PRINT",lindString,"_");
 		}
-		else if(strcmp(contString,aux)>=0){
-			lind=crear_terceto(contantes[0].valor,"_","_");
-			int elementos;
-			elementos=atoi(aux);
-			printf("El atoi funciona %d\n",elementos);
+		else if( auxCont >= elementos ){
+			
+			lind=crear_terceto(contantes[0].valor,"_","_");		
+			
 			if(elementos > 1){
 				for(i=1;i<elementos;i++){
 					itoa(lind,lindString,10);
