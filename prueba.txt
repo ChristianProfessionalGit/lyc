@@ -58,6 +58,26 @@ TAKE (-    ; 4  ;   [2 ; 12 ; 24 ; 48] )
 TAKE (-    ; 12  ;   [56 ; 12 ; 24 ; 48] )
 TAKE (-    ; 12  ;   [] )
 TAKE (*    ; 3  ;   [56 ; 12 ; 24 ; 48] )
+IF ( BETWEEN (z, [2.3 ; 11.22]) OR saldos > 0) 
+{
+mensaje = "caso 1"
+WRITE "funciona el bet?"
+}
+IF ( BETWEEN (z, [2.3 ; 11.22])) 
+{
+mensaje = "caso 2"
+WRITE "funciona el bet?"
+}
+IF ( BETWEEN (z, [2.3 ; 11.22]) OR BETWEEN (a, [2 ; a*(b+4)])) 
+{
+mensaje = "caso 3"
+WRITE "funciona el bet?"
+}
+IF ( BETWEEN (z, [2.3 ; 11.22]) AND BETWEEN (a, [2 ; a*(b+4)])) 
+{
+mensaje = "caso 4"
+WRITE "funciona el bet?"
+}
 -/ esto es un comentario /-
 -//-
 -/ esto es un comentario y dentro hay otro -/comentario/- /-

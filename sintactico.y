@@ -27,9 +27,12 @@ int tind;
 int aind;
 int sind;
 int lind;
+int bind;
 int auxEind;
 int auxTind;
 int auxCont = 0;
+int auxExp1;
+int auxExp2;
 char varItoa[30];
 char varString[30];
 char varReal[30];
@@ -40,6 +43,7 @@ char findString[3];
 char tindString[3];
 char eindString[3];
 char lindString[3];
+char bindString[3];
 char auxEindString[3];
 char aux[4];
 extern int yylineno;
@@ -554,7 +558,43 @@ valor:
     | CONST_CADENA STRING {printf("Regla 56 - valor es: CONST_CADENA STRING \n");};
     ;
 between:
-    BETWEEN PAREN_ABIERTO ID COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO {printf("Regla 57 - BETWEEN es: BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO \n");}
+    BETWEEN PAREN_ABIERTO ID {printf("Que tiene esto %s\n",yytext);strcpy(aux,yytext);} COMA CORCH_ABIERTO expresion {auxExp1=eind;} PUNTO_COMA expresion {auxExp2=eind;} CORCH_CERRADO PAREN_CERRADO {
+		crear_terceto("BETWEEN","_","_");
+		bind=crear_terceto("=","@resultado","0");
+		int num;
+		char expString[4];
+		char valorActual[4];
+		itoa(auxExp1,expString,10);
+		crear_terceto("CMP",aux,expString);
+		num=crear_terceto("BLT","_","_");
+		datoPilaBetween.nro_terceto=num;
+		if(apilarD(&pilaBetween,&datoPilaBetween)==NO_HAY_MEMORIA){
+			printf("No hay memoria para insertar un elemento en la pila del between\n");
+			exit(1);
+		}
+		itoa(auxExp2,expString,10);
+		crear_terceto("CMP",aux,expString);
+		num=crear_terceto("BGT","_","_");
+		datoPilaBetween.nro_terceto=num;
+		if(apilarD(&pilaBetween,&datoPilaBetween)==NO_HAY_MEMORIA){
+			printf("No hay memoria para insertar un elemento en la pila del between\n");
+			exit(1);
+		}
+		bind=crear_terceto("=","@resultado","1");
+		while(!pilaVacia(&pilaBetween)){
+			desapilarD(&pilaBetween,&datoPilaBetween);
+			itoa(obtenerIndiceTercetos(),valorActual,10);
+			strcpy(vector_tercetos[datoPilaBetween.nro_terceto].atr2,valorActual);			
+		}
+		crear_terceto("CMP","@resultado","1");
+		num=crear_terceto("BNE","_","_");
+		datoPilaIf.nro_terceto=num;
+		if(apilarD(&pilaIf,&datoPilaIf)==NO_HAY_MEMORIA){
+			printf("No hay memoria para insertar un elemento en la pila del if\n");
+			exit(1);
+		}
+		printf("Regla 57 - BETWEEN es: BETWEEN PAREN_ABIERTO factor COMA CORCH_ABIERTO expresion PUNTO_COMA expresion CORCH_CERRADO PAREN_CERRADO \n");
+		}
     ;
 lista_constantes:
 	lista_constantes_llena ;
@@ -562,13 +602,13 @@ lista_constantes:
 	;
 lista_constantes_llena:
     lista_constantes_llena PUNTO_COMA CONST_ENTERA {
-		printf("Probemos que tiene esto %s\n",yytext);
+		
 		strcpy(contantes[auxCont].valor,yytext);	
 		auxCont++;	
 		printf("Regla 58 - lista_constantes es: lista_constantes PUNTO_COMA CONST_ENTERA \n");
 		};
     | CORCH_ABIERTO CONST_ENTERA {
-		printf("Probemos que tiene esto %s\n",yytext);
+		
 		strcpy(contantes[auxCont].valor,yytext);	
 		
 		auxCont++;	
@@ -594,10 +634,9 @@ operadores:
 	};
     ;
 take:
-    TAKE PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA {printf("La constante es %s\n",yytext);strcpy(aux,yytext);} PUNTO_COMA lista_constantes CORCH_CERRADO PAREN_CERRADO {
+    TAKE PAREN_ABIERTO operadores PUNTO_COMA CONST_ENTERA {strcpy(aux,yytext);} PUNTO_COMA lista_constantes CORCH_CERRADO PAREN_CERRADO {
 		
-		char contString[4];
-		itoa(auxCont,contString,10);
+		
 		int resultado,i,elementos;		
 	    elementos=atoi(aux);
 		crear_terceto("TAKE","_","_");		
@@ -645,6 +684,9 @@ int main(int argc, char *argv[])
   {
 	generar_ts(&lista_ts);
 	crearPila(&pilaIf);
+	crearPila(&pilaWhile);
+	crearPila(&pilaBetween);
+	crearPila(&pilaTake);
 	yyparse();
 
 	grabar_lista_en_archivo(&lista_ts);	
