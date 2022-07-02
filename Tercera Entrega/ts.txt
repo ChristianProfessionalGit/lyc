@@ -1,0 +1,52 @@
+NOMBRE                              TIPO DE DATO     VALOR                               LONGITUD                           
+a                                   FLOAT                                                0                                  
+b                                   FLOAT                                                0                                  
+c                                   FLOAT                                                0                                  
+d                                   FLOAT                                                0                                  
+numero1                             FLOAT                                                0                                  
+numero2                             FLOAT                                                0                                  
+PEPE                                STRING                                               0                                  
+mensaje                             STRING                                               0                                  
+numero3                             INTEGER                                              0                                  
+numero4                             INTEGER                                              0                                  
+hola                                INTEGER                                              0                                  
+saldos                              INTEGER                                              0                                  
+saldo                               INTEGER                                              0                                  
+variable                            INTEGER                                              0                                  
+2555                                CONST_ENTERA     2555                                0                                  
+99.99                               CONST_FLOTANTE   99.99                               0                                  
+4                                   CONST_ENTERA     4                                   0                                  
+234                                 CONST_ENTERA     234                                 0                                  
+423                                 CONST_ENTERA     423                                 0                                  
+7124                                CONST_ENTERA     7124                                0                                  
+9421                                CONST_ENTERA     9421                                0                                  
+35                                  CONST_ENTERA     35                                  0                                  
+5                                   CONST_ENTERA     5                                   0                                  
+346                                 CONST_ENTERA     346                                 0                                  
+535                                 CONST_ENTERA     535                                 0                                  
+2                                   CONST_ENTERA     2                                   0                                  
+544                                 CONST_ENTERA     544                                 0                                  
+"HOLAdsadasd"                       CONST_CADENA     HOLAdsadasd                         11                                 
+0                                   CONST_ENTERA     0                                   0                                  
+85                                  CONST_ENTERA     85                                  0                                  
+"Le queda poco saldo"               CONST_CADENA     Le_queda_poco_saldo                 19                                 
+"Hola mundoWWWWEWEQW"               CONST_CADENA     Hola_mundoWWWWEWEQW                 19                                 
+"ESTOY EN EL WHILEE"                CONST_CADENA     ESTOY_EN_EL_WHILEE                  18                                 
+"Q UE ONDAAAA"                      CONST_CADENA     Q_UE_ONDAAAA                        12                                 
+"Hola mundo"                        CONST_CADENA     Hola_mundo                          10                                 
+1                                   CONST_ENTERA     1                                   0                                  
+"funciona el if wiii"               CONST_CADENA     funciona_el_if_wiii                 19                                 
+"agggg no funciona"                 CONST_CADENA     agggg_no_funciona                   17                                 
+123                                 CONST_ENTERA     123                                 0                                  
+"probemos el NOT condicion"         CONST_CADENA     probemos_el_NOT_condicion           25                                 
+"while con saltos"                  CONST_CADENA     while_con_saltos                    16                                 
+267                                 CONST_ENTERA     267                                 0                                  
+145                                 CONST_ENTERA     145                                 0                                  
+"while con saltos y OR"             CONST_CADENA     while_con_saltos_y_OR               21                                 
+2.3                                 CONST_FLOTANTE   2.3                                 0                                  
+11.22                               CONST_FLOTANTE   11.22                               0                                  
+"caso 1"                            CONST_CADENA     caso_1                              6                                  
+"funciona el bet?"                  CONST_CADENA     funciona_el_bet?                    16                                 
+"caso 2"                            CONST_CADENA     caso_2                              6                                  
+"caso 3"                            CONST_CADENA     caso_3                              6                                  
+"caso 4"                            CONST_CADENA     caso_4                              6                                  

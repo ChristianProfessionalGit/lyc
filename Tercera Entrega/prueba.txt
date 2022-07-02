@@ -1,0 +1,83 @@
+DECVAR
+a,b,c,d,numero1,numero2:FLOAT
+PEPE,mensaje:STRING
+numero3,numero4,hola,saldos,saldo,variable:INTEGER
+ENDDEC
+hola=2555
+numero1=99.99
+numero2= a*(b+4)
+numero3=234+(423+7124)*9421
+numero4= ((35/5+346-535*2)+544)*2
+WRITE "HOLAdsadasd"
+READ PEPE
+IF (saldos > 0 OR saldos > 85 )
+{
+mensaje = "Le queda poco saldo"
+WRITE "Hola mundoWWWWEWEQW"
+}
+IF (saldos > 0 AND BETWEEN (a, [2 ; a*(b+4)])) 
+{
+mensaje = "Le queda poco saldo"
+WRITE "Hola mundoWWWWEWEQW"
+}
+WHILE (saldos > 0)
+{
+mensaje = "ESTOY EN EL WHILEE"
+WRITE "Q UE ONDAAAA"
+}
+IF (saldos == 0)
+{
+mensaje = "ESTOY EN EL WHILEE"
+WRITE "Q UE ONDAAAA"
+}
+IF (NOT saldos >= 0)
+{
+mensaje = "Le queda poco saldo"
+WRITE "Hola mundo"
+}
+IF ( saldo != 0 OR saldo == 1 ){
+    mensaje="funciona el if wiii"
+}
+IF ( saldo != 0 AND saldo != 1 ){
+    mensaje="agggg no funciona"
+}
+IF ( NOT variable <= 123){
+    mensaje="probemos el NOT condicion"
+}
+WHILE (saldo != 0 AND saldo != 1)
+{
+mensaje = "while con saltos"
+WRITE "Q UE ONDAAAA"
+}
+WHILE (saldo > 267 OR saldo == 145)
+{
+mensaje = "while con saltos y OR"
+WRITE "Q UE ONDAAAA"
+}
+TAKE (-    ; 4  ;   [2 ; 12 ; 24 ; 48] )
+TAKE (-    ; 12  ;   [56 ; 12 ; 24 ; 48] )
+TAKE (-    ; 12  ;   [] )
+TAKE (*    ; 3  ;   [56 ; 12 ; 24 ; 48] )
+IF ( BETWEEN (z, [2.3 ; 11.22]) OR saldos > 0) 
+{
+mensaje = "caso 1"
+WRITE "funciona el bet?"
+}
+IF ( BETWEEN (z, [2.3 ; 11.22])) 
+{
+mensaje = "caso 2"
+WRITE "funciona el bet?"
+}
+IF ( BETWEEN (z, [2.3 ; 11.22]) OR BETWEEN (a, [2 ; a*(b+4)])) 
+{
+mensaje = "caso 3"
+WRITE "funciona el bet?"
+}
+IF ( BETWEEN (z, [2.3 ; 11.22]) AND BETWEEN (a, [2 ; a*(b+4)])) 
+{
+mensaje = "caso 4"
+WRITE "funciona el bet?"
+}
+-/ esto es un comentario /-
+-//-
+-/ esto es un comentario y dentro hay otro -/comentario/- /-
