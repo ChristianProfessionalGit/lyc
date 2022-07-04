@@ -49,7 +49,7 @@ void escribir_datos(FILE* assembler,t_lista* tabla){
                 sprintf(linea, "_%s dd %s\n", (*tabla)->info.nombre,aux);
             }
             else if(strcmp((*tabla)->info.tipodato,"CONST_CADENA")==0){
-                sprintf(linea, "_%s db %s , '$', %d dup (?)\n", (*tabla)->info.valor, (*tabla)->info.nombre,(*tabla)->info.longitud);
+                sprintf(linea, "_%s db %s , '$', %d dup (?)\n", (*tabla)->info.nombre, (*tabla)->info.valor,(*tabla)->info.longitud);
             }
             
         fprintf(assembler, "%s",linea);
@@ -61,28 +61,60 @@ void escribir_codigo(FILE* assembler){
     int i;
     int indice_terceto = obtenerIndiceTercetos();
     for(i=0;i <= indice_terceto;i++)
-	{   if(strcmp(vector_tercetos[i].atr1,"While")==0 || strcmp(vector_tercetos[i].atr1,"TAKE")==0 || strcmp(vector_tercetos[i].atr1,"BETWEEN")==0 ){
-            fprintf(assembler,"\nETIQUETA_%s_%d \n\n",vector_tercetos[i].atr1,i);
+	{   if(strcmp(vector_tercetos[i].atr1,"TAKE")==0 || strcmp(vector_tercetos[i].atr1,"BETWEEN")==0 ){
+            fprintf(assembler,"\nSE EJECUTA %s_%d \n",vector_tercetos[i].atr1,i);
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"While")==0){
+            fprintf(assembler,"\nETIQ_%d \n",i);
+            fprintf(assembler,"\nSE EJECUTA %s \n",vector_tercetos[i].atr1);
         }
         else if(strncmp(vector_tercetos[i].atr1,"ETIQ_",strlen("ETIQ_"))==0){
-            fprintf(assembler,"\n%s\n\n",vector_tercetos[i].atr1);
+            fprintf(assembler,"\n%s\n",vector_tercetos[i].atr1);
         }
         else if(strcmp(vector_tercetos[i].atr2,"_")==0 && strcmp(vector_tercetos[i].atr2,"_")==0 ){
             fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr1);
         }
         else if(strcmp(vector_tercetos[i].atr1,"+")==0){
+            if(strncmp(vector_tercetos[i].atr3,"[",strlen("["))!=0){
+                fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr3);
+            }
             fprintf(assembler,"FADD\n");
         }
         else if(strcmp(vector_tercetos[i].atr1,"-")==0){
+            if(strncmp(vector_tercetos[i].atr3,"[",strlen("["))!=0){
+                fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr3);
+            }
             fprintf(assembler,"FSUB\n");
         }
         else if(strcmp(vector_tercetos[i].atr1,"*")==0){
+            if(strncmp(vector_tercetos[i].atr3,"[",strlen("["))!=0){
+                fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr3);
+            }
             fprintf(assembler,"FMUL\n");
         }
         else if(strcmp(vector_tercetos[i].atr1,"/")==0){
+            if(strncmp(vector_tercetos[i].atr3,"[",strlen("["))!=0){
+                fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr3);
+            }
             fprintf(assembler,"FDIV\n");
         }
+        else if(strcmp(vector_tercetos[i].atr1,"=")==0){
+            if(strncmp(vector_tercetos[i].atr3,"[",strlen("["))!=0){
+                fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr3);
+            }
+            fprintf(assembler,"FSTP %s\n",vector_tercetos[i].atr2);
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"WRITE")==0){
+            fprintf(assembler,"DisplayFloat %s \nnewline 1\n\n",vector_tercetos[i].atr2);
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"READ")==0){
+            fprintf(assembler,"GetFloat %s \n\n",vector_tercetos[i].atr2);
+        }
         else if(strcmp(vector_tercetos[i].atr1,"CMP")==0){
+            if(strncmp(vector_tercetos[i].atr3,"[",strlen("["))!=0){
+                fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr3);
+            }
+            fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr2);
             fprintf(assembler,"FXCH\nFCOM\nFSTSW    AX\nSAHF\nFFREE\n");
         }
         else if(strcmp(vector_tercetos[i].atr1,"BEQ")==0){

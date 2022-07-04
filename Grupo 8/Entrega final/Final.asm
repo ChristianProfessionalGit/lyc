@@ -13,6 +13,7 @@ numero1 dd ?
 numero2 dd ?
 PEPE dd ?
 mensaje dd ?
+prueba dd ?
 numero3 dd ?
 numero4 dd ?
 hola dd ?
@@ -66,12 +67,15 @@ MOV DS, AX
 MOV ES, AX
 
 FLD 2555 
+FSTP hola
 FLD 99.99 
+FSTP numero1
 FLD a 
 FLD b 
 FLD 4 
 FADD
 FMUL
+FSTP numero2
 FLD 234 
 FLD 423 
 FLD 7124 
@@ -79,6 +83,7 @@ FADD
 FLD 9421 
 FMUL
 FADD
+FSTP numero3
 FLD 35 
 FLD 5 
 FDIV
@@ -92,8 +97,17 @@ FLD 544
 FADD
 FLD 2 
 FMUL
-FLD HOLAdsadasd 
+FSTP numero4
+DisplayFloat HOLAdsadasd 
+newline 1
+
+GetFloat PEPE 
+
+DisplayFloat prueba 
+newline 1
+
 FLD 0 
+FLD saldos 
 FXCH
 FCOM
 FSTSW    AX
@@ -101,66 +115,85 @@ SAHF
 FFREE
 JNBE ETIQ_41 
 FLD 85 
+FLD saldos 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JBE ETIQ_46 
+JBE ETIQ_45 
 
 ETIQ_41
-
 FLD Le_queda_poco_saldo 
-FLD Hola_mundoWWWWEWEQW 
+FSTP mensaje
+DisplayFloat Hola_mundoWWWWEWEQW 
+newline 1
 
-ETIQ_46
 
+ETIQ_45
 FLD 0 
+FLD saldos 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JBE ETIQ_70 
+JBE ETIQ_71 
 FLD 2 
+FSTP @expresion1
 FLD a 
 FLD b 
 FLD 4 
 FADD
 FMUL
+FSTP @expresion2
 
-ETIQUETA_BETWEEN_56 
+SE EJECUTA BETWEEN_57 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD a 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNAE ETIQ_64 
+FLD @expresion2 
+FLD a 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNBE ETIQ_64 
+FLD 1 
+FSTP @resultado
 
+ETIQ_64
+FLD 1 
+FLD @resultado 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNAE ETIQ_63 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNBE ETIQ_63 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNE ETIQ_69 
+JNE ETIQ_70 
 FLD Le_queda_poco_saldo 
-FLD Hola_mundoWWWWEWEQW 
-
-ETIQ_69
+FSTP mensaje
+DisplayFloat Hola_mundoWWWWEWEQW 
+newline 1
 
 
 ETIQ_70
 
+ETIQ_71
 
-ETIQUETA_While_71 
+ETIQ_72 
 
+SE EJECUTA While 
 FLD 0 
+FLD saldos 
 FXCH
 FCOM
 FSTSW    AX
@@ -168,214 +201,278 @@ SAHF
 FFREE
 JBE ETIQ_80 
 FLD ESTOY_EN_EL_WHILEE 
-FLD Q_UE_ONDAAAA 
-JMP ETIQ_71 
+FSTP mensaje
+DisplayFloat Q_UE_ONDAAAA 
+newline 1
+
+JMP ETIQ_72 
 
 ETIQ_80
-
 FLD 0 
+FLD saldos 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNE ETIQ_88 
+JNE ETIQ_87 
 FLD ESTOY_EN_EL_WHILEE 
-FLD Q_UE_ONDAAAA 
+FSTP mensaje
+DisplayFloat Q_UE_ONDAAAA 
+newline 1
 
-ETIQ_88
 
+ETIQ_87
 FLD 0 
+FLD saldos 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNB ETIQ_96 
+JNB ETIQ_94 
 FLD Le_queda_poco_saldo 
-FLD Hola_mundo 
+FSTP mensaje
+DisplayFloat Hola_mundo 
+newline 1
 
-ETIQ_96
 
+ETIQ_94
 FLD 0 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNE ETIQ_103 
+JNE ETIQ_101 
 FLD 1 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNE ETIQ_106 
+JNE ETIQ_104 
 
-ETIQ_103
-
+ETIQ_101
 FLD funciona_el_if_wiii 
+FSTP mensaje
 
-ETIQ_106
-
+ETIQ_104
 FLD 0 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JE ETIQ_116 
+JE ETIQ_114 
 FLD 1 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JE ETIQ_115 
+JE ETIQ_113 
 FLD agggg_no_funciona 
+FSTP mensaje
 
-ETIQ_115
+ETIQ_113
 
-
-ETIQ_116
-
+ETIQ_114
 FLD 123 
+FLD variable 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JBE ETIQ_122 
+JBE ETIQ_120 
 FLD probemos_el_NOT_condicion 
+FSTP mensaje
 
-ETIQ_122
+ETIQ_120
 
+ETIQ_121 
 
-ETIQUETA_While_123 
-
+SE EJECUTA While 
 FLD 0 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JE ETIQ_136 
+JE ETIQ_133 
 FLD 1 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JE ETIQ_135 
+JE ETIQ_132 
 FLD while_con_saltos 
-FLD Q_UE_ONDAAAA 
-JMP ETIQ_123 
+FSTP mensaje
+DisplayFloat Q_UE_ONDAAAA 
+newline 1
 
-ETIQ_135
+JMP ETIQ_121 
 
+ETIQ_132
 
-ETIQ_136
+ETIQ_133
 
+ETIQ_134 
 
-ETIQUETA_While_137 
-
+SE EJECUTA While 
 FLD 267 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNBE ETIQ_144 
+JNBE ETIQ_141 
 FLD 145 
+FLD saldo 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNE ETIQ_150 
+JNE ETIQ_146 
 
-ETIQ_144
-
+ETIQ_141
 FLD while_con_saltos_y_OR 
-FLD Q_UE_ONDAAAA 
-JMP ETIQ_137 
+FSTP mensaje
+DisplayFloat Q_UE_ONDAAAA 
+newline 1
 
-ETIQ_150
+JMP ETIQ_134 
 
+ETIQ_146
 
-ETIQUETA_TAKE_151 
-
+SE EJECUTA TAKE_147 
 FLD 2 
+FLD 12 
 FSUB
+FLD 24 
 FSUB
+FLD 48 
 FSUB
-
-ETIQUETA_TAKE_158 
-
-
-ETIQUETA_TAKE_160 
+FSTP @resultado
+DisplayFloat @resultado 
+newline 1
 
 
-ETIQUETA_TAKE_163 
+SE EJECUTA TAKE_154 
+DisplayFloat ERROR 
+newline 1
 
-FLD 56 
-FMUL
-FMUL
-FLD 2.3 
-FLD 11.22 
 
-ETIQUETA_BETWEEN_171 
-
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNAE ETIQ_178 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNBE ETIQ_178 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JE ETIQ_183 
+SE EJECUTA TAKE_156 
 FLD 0 
+FSTP @resultado
+DisplayFloat @resultado 
+newline 1
+
+
+SE EJECUTA TAKE_159 
+FLD 56 
+FLD 12 
+FMUL
+FLD 24 
+FMUL
+FSTP @resultado
+DisplayFloat @resultado 
+newline 1
+
+FLD 2.3 
+FSTP @expresion1
+FLD 11.22 
+FSTP @expresion2
+
+SE EJECUTA BETWEEN_169 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD z 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JBE ETIQ_188 
+JNAE ETIQ_176 
+FLD @expresion2 
+FLD z 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNBE ETIQ_176 
+FLD 1 
+FSTP @resultado
 
-ETIQ_183
+ETIQ_176
+FLD 1 
+FLD @resultado 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JE ETIQ_182 
+FLD 0 
+FLD saldos 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JBE ETIQ_186 
 
+ETIQ_182
 FLD caso_1 
-FLD funciona_el_bet? 
+FSTP mensaje
+DisplayFloat funciona_el_bet? 
+newline 1
 
-ETIQ_188
 
+ETIQ_186
 FLD 2.3 
+FSTP @expresion1
 FLD 11.22 
+FSTP @expresion2
 
-ETIQUETA_BETWEEN_191 
-
+SE EJECUTA BETWEEN_191 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD z 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
 JNAE ETIQ_198 
+FLD @expresion2 
+FLD z 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
 JNBE ETIQ_198 
+FLD 1 
+FSTP @resultado
+
+ETIQ_198
+FLD 1 
+FLD @resultado 
 FXCH
 FCOM
 FSTSW    AX
@@ -383,129 +480,184 @@ SAHF
 FFREE
 JE ETIQ_205 
 
-ETIQ_200
-
+ETIQ_201
 FLD caso_2 
-FLD funciona_el_bet? 
+FSTP mensaje
+DisplayFloat funciona_el_bet? 
+newline 1
+
 
 ETIQ_205
-
 FLD 2.3 
+FSTP @expresion1
 FLD 11.22 
+FSTP @expresion2
 
-ETIQUETA_BETWEEN_208 
+SE EJECUTA BETWEEN_210 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD z 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNAE ETIQ_217 
+FLD @expresion2 
+FLD z 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNBE ETIQ_217 
+FLD 1 
+FSTP @resultado
 
+ETIQ_217
+FLD 1 
+FLD @resultado 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNAE ETIQ_215 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNBE ETIQ_215 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JE ETIQ_232 
+JE ETIQ_238 
 FLD 2 
+FSTP @expresion1
 FLD a 
 FLD b 
 FLD 4 
 FADD
 FMUL
+FSTP @expresion2
 
-ETIQUETA_BETWEEN_223 
-
+SE EJECUTA BETWEEN_228 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD a 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNAE ETIQ_230 
+JNAE ETIQ_235 
+FLD @expresion2 
+FLD a 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNBE ETIQ_230 
+JNBE ETIQ_235 
+FLD 1 
+FSTP @resultado
+
+ETIQ_235
+FLD 1 
+FLD @resultado 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNE ETIQ_237 
+JNE ETIQ_242 
 
-ETIQ_232
-
+ETIQ_238
 FLD caso_3 
-FLD funciona_el_bet? 
+FSTP mensaje
+DisplayFloat funciona_el_bet? 
+newline 1
 
-ETIQ_237
 
+ETIQ_242
 FLD 2.3 
+FSTP @expresion1
 FLD 11.22 
+FSTP @expresion2
 
-ETIQUETA_BETWEEN_240 
+SE EJECUTA BETWEEN_247 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD z 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNAE ETIQ_254 
+FLD @expresion2 
+FLD z 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNBE ETIQ_254 
+FLD 1 
+FSTP @resultado
 
+ETIQ_254
+FLD 1 
+FLD @resultado 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNAE ETIQ_247 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNBE ETIQ_247 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNE ETIQ_269 
+JNE ETIQ_279 
 FLD 2 
+FSTP @expresion1
 FLD a 
 FLD b 
 FLD 4 
 FADD
 FMUL
+FSTP @expresion2
 
-ETIQUETA_BETWEEN_255 
+SE EJECUTA BETWEEN_265 
+FLD 0 
+FSTP @resultado
+FLD @expresion1 
+FLD a 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNAE ETIQ_272 
+FLD @expresion2 
+FLD a 
+FXCH
+FCOM
+FSTSW    AX
+SAHF
+FFREE
+JNBE ETIQ_272 
+FLD 1 
+FSTP @resultado
 
+ETIQ_272
+FLD 1 
+FLD @resultado 
 FXCH
 FCOM
 FSTSW    AX
 SAHF
 FFREE
-JNAE ETIQ_262 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNBE ETIQ_262 
-FXCH
-FCOM
-FSTSW    AX
-SAHF
-FFREE
-JNE ETIQ_268 
+JNE ETIQ_278 
 FLD caso_4 
-FLD funciona_el_bet? 
+FSTP mensaje
+DisplayFloat funciona_el_bet? 
+newline 1
 
-ETIQ_268
 
+ETIQ_278
 
-ETIQ_269
-
+ETIQ_279
 MOV EAX, 4C00h
 INT 21h
 

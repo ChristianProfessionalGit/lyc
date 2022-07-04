@@ -1,6 +1,6 @@
 DECVAR
 a,b,c,d,numero1,numero2:FLOAT
-PEPE,mensaje:STRING
+PEPE,mensaje,prueba:STRING
 numero3,numero4,hola,saldos,saldo,variable:INTEGER
 ENDDEC
 hola=2555
@@ -10,6 +10,7 @@ numero3=234+(423+7124)*9421
 numero4= ((35/5+346-535*2)+544)*2
 WRITE "HOLAdsadasd"
 READ PEPE
+WRITE prueba
 IF (saldos > 0 OR saldos > 85 )
 {
 mensaje = "Le queda poco saldo"

@@ -386,15 +386,20 @@ entrada:
 		printf("Regla 25 - La entrada es: READ ID\n");}
     ;
 salida:
-    WRITE constante {
+    WRITE CONST_CADENA {
+		dato.longitud = strlen(yytext)-2;
+		strcpy(dato.valor, yytext);
+		quitar_blancos_y_comillas(yytext);
+		strcpy(dato.nombre, yytext);												
+		strcpy(dato.tipodato, "CONST_CADENA");
+		crear_terceto("WRITE",dato.nombre,"_");
+		insertar_en_ts(&lista_ts, &dato);
+		printf("Regla 26 - La salida es: WRITE CONST_CADENA\n");};
+	| WRITE ID {
 		buscar_en_lista(&lista_ts, yylval.string_val);
-		itoa(find,findString,10);
-		char varAux[10];
-		strcpy(varAux,"[");				
-		strcat(varAux,findString);
-		strcat(varAux,"]");
-		crear_terceto("WRITE",varAux,"_");
-		printf("Regla 26 - La salida es: WRITE valor\n");}
+		crear_terceto("WRITE",yylval.string_val,"_");
+		printf("Regla 26 - La salida es: WRITE ID\n");
+	}
     ;
 condiciones:
     condicion operador_logico condicion  {printf("Regla 27 - condicion operador_logico condicion \n");};
@@ -599,11 +604,11 @@ constante:
     | CONST_CADENA {
 					
 					dato.longitud = strlen(yytext)-2;
-					strcpy(dato.nombre, yytext);
+					strcpy(dato.valor, yytext);
 					quitar_blancos_y_comillas(yytext);
-					strcpy(dato.valor, yytext);												
+					strcpy(dato.nombre, yytext);												
 					strcpy(dato.tipodato, "CONST_CADENA");
-					find=crear_terceto(dato.valor,"_","_");												
+					find=crear_terceto(dato.nombre,"_","_");												
 					insertar_en_ts(&lista_ts, &dato);															
 					printf("Regla 51 - constante es: CONST_CADENA \n");};
     ;
@@ -623,10 +628,8 @@ valor:
     | CONST_CADENA STRING {printf("Regla 56 - valor es: CONST_CADENA STRING \n");};
     ;
 between:
-    BETWEEN PAREN_ABIERTO ID {strcpy(aux,yytext);} COMA CORCH_ABIERTO expresion {auxExp1=eind;} PUNTO_COMA expresion {auxExp2=eind;} CORCH_CERRADO PAREN_CERRADO {
-		crear_terceto("BETWEEN","_","_");
-		bind=crear_terceto("=","@resultado","0");
-		int num;
+    BETWEEN PAREN_ABIERTO ID {strcpy(aux,yytext);} COMA CORCH_ABIERTO expresion {
+		auxExp1=eind;
 		char expString[4];
 		char valorActual[4];
 		char varAux[10];
@@ -634,19 +637,34 @@ between:
 		itoa(auxExp1,expString,10);
 		strcat(varAux,expString);
 		strcat(varAux,"]");
+		crear_terceto("=","@expresion1",varAux);
+	} PUNTO_COMA expresion {
+		auxExp2=eind;
+		char expString[4];
+		char valorActual[4];
+		char varAux[10];
+		strcpy(varAux,"[");
+		itoa(auxExp2,expString,10);
+		strcat(varAux,expString);
+		strcat(varAux,"]");
+		crear_terceto("=","@expresion2",varAux);
+	} CORCH_CERRADO PAREN_CERRADO {
+		crear_terceto("BETWEEN","_","_");
+		bind=crear_terceto("=","@resultado","0");
+		int num;
+		char expString[4];
+		char valorActual[4];
+		char varAux[10];	
 		
-		crear_terceto("CMP",aux,varAux);
+		crear_terceto("CMP",aux,"@expresion1");
 		num=crear_terceto("BLT","_","_");
 		datoPilaBetween.nro_terceto=num;
 		if(apilarD(&pilaBetween,&datoPilaBetween)==NO_HAY_MEMORIA){
 			printf("No hay memoria para insertar un elemento en la pila del between\n");
 			exit(1);
 		}
-		strcpy(varAux,"[");
-		itoa(auxExp2,expString,10);
-		strcat(varAux,expString);
-		strcat(varAux,"]");
-		crear_terceto("CMP",aux,varAux);
+		
+		crear_terceto("CMP",aux,"@expresion2");
 		num=crear_terceto("BGT","_","_");
 		datoPilaBetween.nro_terceto=num;
 		if(apilarD(&pilaBetween,&datoPilaBetween)==NO_HAY_MEMORIA){
@@ -654,11 +672,16 @@ between:
 			exit(1);
 		}
 		bind=crear_terceto("=","@resultado","1");
+		
+		itoa( obtenerIndiceTercetos(),valorActual,10);
+		strcpy(varAux,"ETIQ_");
+		strcat(varAux,valorActual);
+		num=crear_terceto(varAux,"_","_");
 		while(!pilaVacia(&pilaBetween)){
 			desapilarD(&pilaBetween,&datoPilaBetween);
-			char varAux[10];
+			
 			strcpy(varAux,"[");
-			itoa(obtenerIndiceTercetos(),valorActual,10);
+			itoa(num,valorActual,10);
 			strcat(varAux,valorActual);
 			strcat(varAux,"]");
 			strcpy(vector_tercetos[datoPilaBetween.nro_terceto].atr2,varAux);			
@@ -725,7 +748,7 @@ take:
 			itoa(lind,lindString,10);
 			strcat(varAux,lindString);
 			strcat(varAux,"]");
-			crear_terceto("PRINT",varAux,"_");
+			crear_terceto("WRITE","@resultado","_");
 		}
 		else if( auxCont >= elementos ){
 			
@@ -749,11 +772,11 @@ take:
 			itoa(lind,lindString,10);
 			strcat(varAux,lindString);
 			strcat(varAux,"]");	
-			crear_terceto("PRINT",varAux,"_");
+			crear_terceto("WRITE","@resultado","_");
 		}
 		else{
 			
-			crear_terceto("PRINT","ERROR","_");
+			crear_terceto("WRITE","ERROR","_");
 		}
 		auxCont=0;
 		
