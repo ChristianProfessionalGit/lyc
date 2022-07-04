@@ -23,7 +23,7 @@ void generarAssembler(t_lista* tabla)
 
     fprintf(archivo, "\n.CODE\n\nSTART:\n\nMOV AX,@DATA\nMOV DS, AX\nMOV ES, AX\n\n");
 
-    //escribir_codigo(archivo);
+    escribir_codigo(archivo);
 
     fprintf(archivo, "MOV EAX, 4C00h\nINT 21h\n\nEND START\n");
 
@@ -36,7 +36,7 @@ void escribir_datos(FILE* assembler,t_lista* tabla){
     char aux[50];
     while(*tabla){
         
-            printf("Leamos la tabla %s\n",(*tabla)->info.tipodato);
+            
             if(strcmp((*tabla)->info.tipodato,"INTEGER")==0 || strcmp((*tabla)->info.tipodato,"FLOAT")==0 || strcmp((*tabla)->info.tipodato,"STRING")==0){
                  sprintf(linea, "%s dd ?\n", (*tabla)->info.nombre);
             }
@@ -56,4 +56,77 @@ void escribir_datos(FILE* assembler,t_lista* tabla){
         tabla=&(*tabla)->sSig;
     }
 
+}
+void escribir_codigo(FILE* assembler){
+    int i;
+    int indice_terceto = obtenerIndiceTercetos();
+    for(i=0;i <= indice_terceto;i++)
+	{   if(strcmp(vector_tercetos[i].atr1,"While")==0 || strcmp(vector_tercetos[i].atr1,"TAKE")==0 || strcmp(vector_tercetos[i].atr1,"BETWEEN")==0 ){
+            fprintf(assembler,"\nETIQUETA_%s_%d \n\n",vector_tercetos[i].atr1,i);
+        }
+        else if(strncmp(vector_tercetos[i].atr1,"ETIQ_",strlen("ETIQ_"))==0){
+            fprintf(assembler,"\n%s\n\n",vector_tercetos[i].atr1);
+        }
+        else if(strcmp(vector_tercetos[i].atr2,"_")==0 && strcmp(vector_tercetos[i].atr2,"_")==0 ){
+            fprintf(assembler,"FLD %s \n",vector_tercetos[i].atr1);
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"+")==0){
+            fprintf(assembler,"FADD\n");
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"-")==0){
+            fprintf(assembler,"FSUB\n");
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"*")==0){
+            fprintf(assembler,"FMUL\n");
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"/")==0){
+            fprintf(assembler,"FDIV\n");
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"CMP")==0){
+            fprintf(assembler,"FXCH\nFCOM\nFSTSW    AX\nSAHF\nFFREE\n");
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BEQ")==0){
+            fprintf(assembler,"JE ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BNE")==0){
+            fprintf(assembler,"JNE ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BLT")==0){
+            fprintf(assembler,"JNAE ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BLE")==0){
+            fprintf(assembler,"JBE ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BGT")==0){
+            fprintf(assembler,"JNBE ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BGE")==0){
+            fprintf(assembler,"JNB ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        else if(strcmp(vector_tercetos[i].atr1,"BI")==0){
+            fprintf(assembler,"JMP ETIQ_%s \n",conseguir_etiqueta(vector_tercetos[i].atr2));
+        }
+        
+    }
+}
+
+char* conseguir_etiqueta(const char *s){
+   
+    char *pl,*resultado;
+    resultado = (char*) malloc(sizeof(char) *  strlen(s));
+    if(resultado == NULL)
+	{
+		return NULL;
+	}
+    pl=resultado;
+    s++;
+    while(*s != ']' && *s != '\0'){
+        
+        *pl=*s;
+        pl++;
+        s++;
+       
+    }
+    *pl='\0';     
+    return resultado;
 }

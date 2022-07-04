@@ -208,9 +208,18 @@ if:
 					printf("No hay memoria para insertar un elemento en la pila\n");
 					exit(1);
 				}
-				char valorActual[3];
-				itoa(obtenerIndiceTercetos(),valorActual,10);
-				strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+				char valorActual[4];
+				char varAux[10];
+				int num;
+				itoa( obtenerIndiceTercetos(),valorActual,10);
+				strcpy(varAux,"ETIQ_");
+				strcat(varAux,valorActual);
+				num=crear_terceto(varAux,"_","_");
+				strcpy(varAux,"[");
+				itoa(num,valorActual,10);
+				strcat(varAux,valorActual);
+				strcat(varAux,"]");
+				strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,varAux);
 				strcpy(varComparador,vector_tercetos[datoPilaIf.nro_terceto].atr1);
 				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
                                     
@@ -249,8 +258,17 @@ if:
 		while(!pilaVacia(&pilaIf)){
 			desapilarD(&pilaIf,&datoPilaIf);		
 			char valorActual[3];
-			itoa(obtenerIndiceTercetos(),valorActual,10);
-			strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+			char varAux[10];
+			int num;
+			itoa( obtenerIndiceTercetos(),valorActual,10);
+			strcpy(varAux,"ETIQ_");
+			strcat(varAux,valorActual);
+			num=crear_terceto(varAux,"_","_");
+			strcpy(varAux,"[");
+			itoa(num,valorActual,10);
+			strcat(varAux,valorActual);
+			strcat(varAux,"]");			
+			strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,varAux);
 		}
 		printf("Regla 22 - IF es: IF PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");
 		};
@@ -275,8 +293,17 @@ while:
 					exit(1);
 				}
 				char valorActual[3];
-				itoa(obtenerIndiceTercetos(),valorActual,10);
-				strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+				char varAux[10];
+				int num;
+				itoa( obtenerIndiceTercetos(),valorActual,10);
+				strcpy(varAux,"ETIQ_");
+				strcat(varAux,valorActual);
+				num=crear_terceto(varAux,"_","_");
+				strcpy(varAux,"[");
+				itoa(num,valorActual,10);
+				strcat(varAux,valorActual);
+				strcat(varAux,"]");				
+				strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,varAux);
 				strcpy(varComparador,vector_tercetos[datoPilaIf.nro_terceto].atr1);
 				 /*Reescribo el terceto cambiando el comparador por su opuesto*/
                                     
@@ -314,18 +341,29 @@ while:
 	  sentencias LLAVE_CERRADA {
 		int num_terceto=crear_terceto("BI","_","_");
 		char valorActual[3];
+		char varAux[10];
+		int num;
 		while(!pilaVacia(&pilaIf)){
-			desapilarD(&pilaIf,&datoPilaIf);		
-			
-			itoa(obtenerIndiceTercetos(),valorActual,10);
-			strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,valorActual);
+			desapilarD(&pilaIf,&datoPilaIf);
+			itoa( obtenerIndiceTercetos(),valorActual,10);
+			strcpy(varAux,"ETIQ_");
+			strcat(varAux,valorActual);
+			num=crear_terceto(varAux,"_","_");
+			strcpy(varAux,"[");
+			itoa(num,valorActual,10);
+			strcat(varAux,valorActual);
+			strcat(varAux,"]");				
+			strcpy(vector_tercetos[datoPilaIf.nro_terceto].atr2,varAux);
 		}
 		if(desapilarD(&pilaWhile,&datoPilaWhile)==PILA_VACIA){
 			printf("No hay elementos en la pila\n");
 			exit(1);
 		}
+	    strcpy(varAux,"[");
 		itoa(datoPilaWhile.nro_terceto,valorActual,10);
-		strcpy(vector_tercetos[num_terceto].atr2,valorActual);
+		strcat(varAux,valorActual);
+		strcat(varAux,"]");		
+		strcpy(vector_tercetos[num_terceto].atr2,varAux);
 		 printf("Regla 23 - While es: WHILE PAREN_ABIERTO condiciones PAREN_CERRADO LLAVE_ABIERTA sentencias LLAVE_CERRADA \n");
 		 };
     ;
@@ -333,7 +371,11 @@ asignacion:
     ID ASIGNACION expresion {
 		buscar_en_lista(&lista_ts, $1);
 		itoa(eind,eindString,10);
-		aind=crear_terceto("=",$1,eindString);
+		char varAux[10];
+		strcpy(varAux,"[");				
+		strcat(varAux,eindString);
+		strcat(varAux,"]");
+		aind=crear_terceto("=",$1,varAux);
 		printf("Regla 24 - ASIGNACION: ID = expresion\n");
 							}    
     ;
@@ -347,7 +389,11 @@ salida:
     WRITE constante {
 		buscar_en_lista(&lista_ts, yylval.string_val);
 		itoa(find,findString,10);
-		crear_terceto("WRITE",findString,"_");
+		char varAux[10];
+		strcpy(varAux,"[");				
+		strcat(varAux,findString);
+		strcat(varAux,"]");
+		crear_terceto("WRITE",varAux,"_");
 		printf("Regla 26 - La salida es: WRITE valor\n");}
     ;
 condiciones:
@@ -400,7 +446,11 @@ condicion:
     ID comparador constante {
 		buscar_en_lista(&lista_ts, $1);
 		itoa(find,findString,10);
-		crear_terceto("CMP",$1,findString);
+		char varAux[10];
+		strcpy(varAux,"[");				
+		strcat(varAux,findString);
+		strcat(varAux,"]");
+		crear_terceto("CMP",$1,varAux);
 		int num_terceto=crear_terceto(varComparador,"_","_");
 		datoPilaIf.nro_terceto=num_terceto;
 		if(apilarD(&pilaIf,&datoPilaIf)==NO_HAY_MEMORIA){
@@ -461,13 +511,27 @@ expresion:
     | expresion SUMA termino {
 				itoa(eind,eindString,10);
 				itoa(tind,tindString,10);
-				eind=crear_terceto("+",eindString,tindString);
+				char varAux[10],varAux2[10];
+				strcpy(varAux,"[");				
+				strcat(varAux,eindString);
+				strcat(varAux,"]");
+				strcpy(varAux2,"[");				
+				strcat(varAux2,tindString);
+				strcat(varAux2,"]");
+				eind=crear_terceto("+",varAux,varAux2);
 				printf("Regla 41 - expresion es: expresion SUMA termino \n");
 							};
     | expresion RESTA termino {
 				itoa(eind,eindString,10);
 				itoa(tind,tindString,10);
-				eind=crear_terceto("-",eindString,tindString);
+				char varAux[10],varAux2[10];
+				strcpy(varAux,"[");				
+				strcat(varAux,eindString);
+				strcat(varAux,"]");
+				strcpy(varAux2,"[");				
+				strcat(varAux2,tindString);
+				strcat(varAux2,"]");
+				eind=crear_terceto("-",varAux,varAux2);
 				printf("Regla 42 - expresion es: expresion RESTA termino \n");
 							};
     ;
@@ -479,13 +543,27 @@ termino:
     | termino MULTI factor {
 				itoa(tind,tindString,10);
 				itoa(find,findString,10);
-				tind=crear_terceto("*",tindString,findString);
+				char varAux[10],varAux2[10];
+				strcpy(varAux,"[");				
+				strcat(varAux,tindString);
+				strcat(varAux,"]");
+				strcpy(varAux2,"[");				
+				strcat(varAux2,findString);
+				strcat(varAux2,"]");
+				tind=crear_terceto("*",varAux,varAux2);
 				printf("Regla 44 - termino es: termino MULTI factor \n");
 							};
     | termino DIVI factor {
 				itoa(tind,tindString,10);
 				itoa(find,findString,10);
-				tind=crear_terceto("/",tindString,findString);
+				char varAux[10],varAux2[10];
+				strcpy(varAux,"[");				
+				strcat(varAux,tindString);
+				strcat(varAux,"]");
+				strcpy(varAux2,"[");				
+				strcat(varAux2,findString);
+				strcat(varAux2,"]");
+				tind=crear_terceto("/",varAux,varAux2);
 				printf("Regla 45 - termino es: termino DIVI factor \n");
 							};
     ;
@@ -545,22 +623,30 @@ valor:
     | CONST_CADENA STRING {printf("Regla 56 - valor es: CONST_CADENA STRING \n");};
     ;
 between:
-    BETWEEN PAREN_ABIERTO ID {printf("Que tiene esto %s\n",yytext);strcpy(aux,yytext);} COMA CORCH_ABIERTO expresion {auxExp1=eind;} PUNTO_COMA expresion {auxExp2=eind;} CORCH_CERRADO PAREN_CERRADO {
+    BETWEEN PAREN_ABIERTO ID {strcpy(aux,yytext);} COMA CORCH_ABIERTO expresion {auxExp1=eind;} PUNTO_COMA expresion {auxExp2=eind;} CORCH_CERRADO PAREN_CERRADO {
 		crear_terceto("BETWEEN","_","_");
 		bind=crear_terceto("=","@resultado","0");
 		int num;
 		char expString[4];
 		char valorActual[4];
+		char varAux[10];
+		strcpy(varAux,"[");
 		itoa(auxExp1,expString,10);
-		crear_terceto("CMP",aux,expString);
+		strcat(varAux,expString);
+		strcat(varAux,"]");
+		
+		crear_terceto("CMP",aux,varAux);
 		num=crear_terceto("BLT","_","_");
 		datoPilaBetween.nro_terceto=num;
 		if(apilarD(&pilaBetween,&datoPilaBetween)==NO_HAY_MEMORIA){
 			printf("No hay memoria para insertar un elemento en la pila del between\n");
 			exit(1);
 		}
+		strcpy(varAux,"[");
 		itoa(auxExp2,expString,10);
-		crear_terceto("CMP",aux,expString);
+		strcat(varAux,expString);
+		strcat(varAux,"]");
+		crear_terceto("CMP",aux,varAux);
 		num=crear_terceto("BGT","_","_");
 		datoPilaBetween.nro_terceto=num;
 		if(apilarD(&pilaBetween,&datoPilaBetween)==NO_HAY_MEMORIA){
@@ -570,8 +656,12 @@ between:
 		bind=crear_terceto("=","@resultado","1");
 		while(!pilaVacia(&pilaBetween)){
 			desapilarD(&pilaBetween,&datoPilaBetween);
+			char varAux[10];
+			strcpy(varAux,"[");
 			itoa(obtenerIndiceTercetos(),valorActual,10);
-			strcpy(vector_tercetos[datoPilaBetween.nro_terceto].atr2,valorActual);			
+			strcat(varAux,valorActual);
+			strcat(varAux,"]");
+			strcpy(vector_tercetos[datoPilaBetween.nro_terceto].atr2,varAux);			
 		}
 		crear_terceto("CMP","@resultado","1");
 		num=crear_terceto("BNE","_","_");
@@ -626,12 +716,16 @@ take:
 		
 		int resultado,i,elementos;		
 	    elementos=atoi(aux);
+		char varAux[10];
 		crear_terceto("TAKE","_","_");		
 		if(auxCont == 0 ){
-			printf("Se puede realizar el TAKE\n");
+			
 			lind=crear_terceto("=","@resultado","0");
+			strcpy(varAux,"[");
 			itoa(lind,lindString,10);
-			crear_terceto("PRINT",lindString,"_");
+			strcat(varAux,lindString);
+			strcat(varAux,"]");
+			crear_terceto("PRINT",varAux,"_");
 		}
 		else if( auxCont >= elementos ){
 			
@@ -639,17 +733,26 @@ take:
 			
 			if(elementos > 1){
 				for(i=1;i<elementos;i++){
+					strcpy(varAux,"[");
 					itoa(lind,lindString,10);
-					lind=crear_terceto(opindString,lindString,contantes[i].valor);
+					strcat(varAux,lindString);
+					strcat(varAux,"]");					
+					lind=crear_terceto(opindString,varAux,contantes[i].valor);
 				}				
 			}
+			strcpy(varAux,"[");
 			itoa(lind,lindString,10);
-			lind=crear_terceto("=","@resultado",lindString);
+			strcat(varAux,lindString);
+			strcat(varAux,"]");	
+			lind=crear_terceto("=","@resultado",varAux);
+			strcpy(varAux,"[");
 			itoa(lind,lindString,10);
-			crear_terceto("PRINT",lindString,"_");
+			strcat(varAux,lindString);
+			strcat(varAux,"]");	
+			crear_terceto("PRINT",varAux,"_");
 		}
 		else{
-			printf("No se puede realizar el TAKE\n");
+			
 			crear_terceto("PRINT","ERROR","_");
 		}
 		auxCont=0;

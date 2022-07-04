@@ -24,6 +24,7 @@ typedef struct
 void generarAssembler(t_lista*);
 void escribir_datos(FILE*,t_lista*);
 void escribir_codigo(FILE*);
+char* conseguir_etiqueta(const char *);
 
 
 
